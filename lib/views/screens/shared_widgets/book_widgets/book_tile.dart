@@ -55,14 +55,18 @@ class BookTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )),
               if (book.categories != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: book.categories!
-                      .map((e) => Container(
-                            margin: EdgeInsets.only(right: generalMargin),
-                            child: CategoryTile(category: e),
-                          ))
-                      .toList(),
+                Container(
+                  height: CATEGORY_TILE_HEIGHT,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    children: book.categories!
+                        .map((e) => Container(
+                              margin: EdgeInsets.only(right: generalMargin),
+                              child: CategoryTile(category: e),
+                            ))
+                        .toList(),
+                  ),
                 )
             ],
           ),

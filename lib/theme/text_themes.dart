@@ -6,3 +6,6 @@ TextStyle? prominentTextStyle(TextTheme appTextTheme) => appTextTheme.bodyMedium
 
 TextStyle? bookNameStyle(TextTheme appTextTheme) => appTextTheme.bodyLarge
     ?.copyWith(color: secondaryColor, fontWeight: FontWeight.bold);
+
+TextStyle? categoryNameStyle(TextTheme appTextTheme) =>
+    appTextTheme.bodySmall?.copyWith();

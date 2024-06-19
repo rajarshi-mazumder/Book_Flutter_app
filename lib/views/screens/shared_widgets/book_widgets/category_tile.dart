@@ -1,19 +1,30 @@
 import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
+import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
+
+double CATEGORY_TILE_HEIGHT = 35;
 
 class CategoryTile extends StatelessWidget {
   CategoryTile({super.key, required this.category});
   Category category;
   @override
   Widget build(BuildContext context) {
+    TextTheme appTextTheme = Theme.of(context).textTheme;
     return Container(
         padding: EdgeInsets.all(generalPadding),
+        height: CATEGORY_TILE_HEIGHT,
         decoration: BoxDecoration(
             color: primaryColor,
             borderRadius:
                 BorderRadius.all(Radius.circular(generalBorderRadius))),
-        child: Text(category.name));
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(category.name, style: categoryNameStyle(appTextTheme)),
+          ],
+        ));
   }
 }

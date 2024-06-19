@@ -6,10 +6,13 @@ Color tertiaryColor = const Color.fromARGB(255, 255, 203, 154);
 Color backgroundColor = const Color.fromARGB(255, 18, 19, 18);
 Color cardColor = const Color.fromARGB(255, 209, 232, 226);
 
+Color appBarColor = const Color.fromARGB(255, 25, 26, 25);
+
 ThemeData customTheme = ThemeData(
     brightness: Brightness.dark,
     primaryColor: primaryColor,
     scaffoldBackgroundColor: backgroundColor,
+    appBarTheme: AppBarTheme(backgroundColor: appBarColor, elevation: 5),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(fontSize: 16),
       bodyMedium: TextStyle(fontSize: 14),

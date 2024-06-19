@@ -1,7 +1,9 @@
 import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
+import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/books_list.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_tile.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,13 +28,51 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  resetFilteredBooks() {
+    setState(() {
+      filteredBooksList = [];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Book Summarizer"),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Container(
+              height: 40,
+              margin: EdgeInsets.all(generalMargin),
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(right: generalMargin),
+                      child: GestureDetector(
+                        child: CategoryTile(category: Category(name: "All")),
+                        onTap: () {
+                          resetFilteredBooks();
+                        },
+                      )),
+                  ...categoryMap.entries
+                      .map((e) => Container(
+                          margin: EdgeInsets.only(right: generalMargin),
+                          child: GestureDetector(
+                            child: CategoryTile(category: e.value),
+                            onTap: () {
+                              print(e.value.name);
+                              filterBooksByCategory(
+                                  categoryToFilterBy: e.value);
+                            },
+                          )))
+                      .toList()
+                ],
+              ),
+            ),
             BooksList(
                 booksList: filteredBooksList.isNotEmpty
                     ? filteredBooksList
