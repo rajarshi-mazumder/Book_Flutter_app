@@ -17,8 +17,7 @@ class CategoryTile extends StatelessWidget {
         height: CATEGORY_TILE_HEIGHT,
         decoration: BoxDecoration(
             color: primaryColor,
-            borderRadius:
-                BorderRadius.all(Radius.circular(generalBorderRadius))),
+            borderRadius: BorderRadius.all(Radius.circular(smallBorderRadius))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

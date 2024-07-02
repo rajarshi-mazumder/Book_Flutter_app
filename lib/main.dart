@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:book_frontend/theme/theme_constants.dart';
-import 'package:book_frontend/views/screens/home_page.dart';
+import 'package:book_frontend/views/screens/signin_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: customTheme,
-      home: HomePage(),
+      // home: const HomePage(),
+      home: SignInScreen(),
       scrollBehavior: MyCustomScrollBehavior(),
     );
   }

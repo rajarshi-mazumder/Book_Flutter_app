@@ -1,3 +1,4 @@
+import 'package:book_frontend/theme/button_themes.dart';
 import 'package:flutter/material.dart';
 
 Color primaryColor = const Color.fromARGB(255, 17, 100, 102);
@@ -13,6 +14,7 @@ ThemeData customTheme = ThemeData(
     primaryColor: primaryColor,
     scaffoldBackgroundColor: backgroundColor,
     appBarTheme: AppBarTheme(backgroundColor: appBarColor, elevation: 5),
+    elevatedButtonTheme: ElevatedButtonThemeData(style: primaryButtonStyle),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(fontSize: 16),
       bodyMedium: TextStyle(fontSize: 14),
