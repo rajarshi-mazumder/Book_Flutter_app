@@ -1,14 +1,18 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint, make_response
 from config import Config
 from models import db, Book, Author, Category, User
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import jwt
+from datetime import datetime, timezone, timedelta
+from flask_jwt_extended import JWTManager, create_access_token
+from .auth_service import auth_required
 
 user_service= Blueprint("users", __name__)
 
 @user_service.route("/users", methods=["GET"])
-def get_all_users():
+@auth_required
+def get_all_users(current_user):
     users= User.query.all()
     output_users=[]
 
@@ -76,3 +80,5 @@ def add_user_books_started(user_id):
 @user_service.route("/users/<user_id>", methods=["PUT"])
 def update_users():
     pass
+
+
