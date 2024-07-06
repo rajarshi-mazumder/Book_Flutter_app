@@ -21,7 +21,7 @@ class AuthService {
       final data = jsonDecode(response.body);
       final token = data['token'];
       // Save the token in local storage or use it for subsequent requests
-      saveAuthToken(token: token);
+      await saveAuthToken(token: token);
       print('Login successful. Token: $token');
       return true;
     } else {
@@ -37,17 +37,25 @@ class AuthService {
 
     final response = await http.post(
       url,
-      body: {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
         "name": name,
         "email": email,
         "password": password,
-      },
+      }),
     );
     if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final token = data['token'];
+      // Save the token in local storage or use it for subsequent requests
+      await saveAuthToken(token: token);
+      print('Registration successful. Token: $token');
       return true;
     } else {
       if (kDebugMode) {
-        print("User creation failed: $response");
+        print("User creation failed: ${response.body}");
       }
       return false;
     }
@@ -79,6 +87,10 @@ class AuthService {
       print('Silent login failed. Error: $e');
     }
     return null;
+  }
+
+  static logout() async {
+    await storage.delete(key: 'jwt_token');
   }
 
   static saveAuthToken({required String token}) async {

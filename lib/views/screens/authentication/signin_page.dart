@@ -1,28 +1,38 @@
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/services/auth_services/auth_services.dart';
+import 'package:book_frontend/views/screens/authentication/signup_page.dart';
+import 'package:book_frontend/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignInPageState createState() => _SignInPageState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit({required UserProvider userProvider}) async {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text;
       final password = _passwordController.text;
-      AuthService.login(email, password);
+      await userProvider.login(email, password);
+      _navigateBasedOnLoginStatus(userProvider.isLoggedIn);
     }
   }
 
-  void _silentLogin({required UserProvider userProvider}) {
-    userProvider.silentLogin();
+  void _navigateBasedOnLoginStatus(bool isLoggedIn) {
+    if (isLoggedIn) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    }
   }
 
   @override
@@ -65,13 +75,21 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: _handleSubmit,
+                    onPressed: () => _handleSubmit(userProvider: userProvider),
                     child: Text('Submit'),
                   ),
-                  ElevatedButton(
-                    onPressed: () => _silentLogin(userProvider: userProvider),
-                    child: Text('Silent loginn'),
-                  ),
+                  Row(
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUpPage()));
+                          },
+                          child: Text("Don't have an account? Login"))
+                    ],
+                  )
                 ],
               ),
             ),

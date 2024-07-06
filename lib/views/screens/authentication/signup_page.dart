@@ -1,28 +1,42 @@
+import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/services/auth_services/auth_services.dart';
+import 'package:book_frontend/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit({required UserProvider userProvider}) async {
     if (_formKey.currentState!.validate()) {
+      final name = _nameController.text;
       final email = _emailController.text;
       final password = _passwordController.text;
-      AuthService.login(email, password);
+      await userProvider.register(name, email, password);
+      _navigateBasedOnLoginStatus(userProvider.isLoggedIn);
+    }
+  }
+
+  void _navigateBasedOnLoginStatus(bool isLoggedIn) {
+    if (isLoggedIn) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic>? userInfo;
+    UserProvider userProvider = context.watch<UserProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up'),
@@ -66,7 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _handleSubmit,
+                onPressed: () => _handleSubmit(userProvider: userProvider),
                 child: Text('Submit'),
               ),
             ],

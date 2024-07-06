@@ -7,8 +7,11 @@ import jwt
 from datetime import datetime, timezone, timedelta
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required,  get_jwt_identity
 from functools import wraps
+import asyncio
 
 auth_service= Blueprint("auth", __name__)
+
+token_expiration_time=timedelta(minutes=300)
 
 def auth_required(f):
     @wraps(f)
@@ -54,7 +57,7 @@ def login():
         return make_response('Could not verify 2nd', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
     
     if check_password_hash(user.password, auth.password):
-        token = create_access_token(identity={'id': user.id}, expires_delta= timedelta(minutes=300))
+        token = create_access_token(identity={'id': user.id}, expires_delta= token_expiration_time)
         return jsonify({'token': token})
     
     return make_response('Could not verify 3rd', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
@@ -69,7 +72,10 @@ def register():
     email = data['email']
     password = data['password']
     
-    return create_user_object(name, email, password)
+    new_user= create_user_object(name, email, password)
+    token = create_access_token(identity={'id': new_user.id}, expires_delta= token_expiration_time)
+    return jsonify({'token': token})
+
 
 def create_user_object(name, email, password):
      # Check if the user already exists
@@ -83,4 +89,4 @@ def create_user_object(name, email, password):
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({f'message': 'New user created '})
+    return new_user

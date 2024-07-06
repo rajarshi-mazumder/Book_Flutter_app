@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
-import 'package:book_frontend/views/screens/authentication/signin_page.dart';
+import 'package:book_frontend/views/screens/authentication/silent_signin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,8 +21,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: customTheme,
+        debugShowCheckedModeBanner: false,
         // home: const HomePage(),
-        home: SignInScreen(),
+        home: SilentSignInPage(),
         scrollBehavior: MyCustomScrollBehavior(),
       ),
     );

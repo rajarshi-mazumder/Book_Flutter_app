@@ -1,10 +1,13 @@
+import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/books_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,14 +39,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = context.watch<UserProvider>();
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Book Summarizer"),
-      ),
+      appBar: Navbar(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text("Welcome ${userProvider.user}"),
             Container(
               height: 40,
               margin: EdgeInsets.all(generalMargin),

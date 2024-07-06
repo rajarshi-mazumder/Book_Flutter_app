@@ -40,11 +40,11 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  // void logout() async {
-  //   await AuthService.logout();
-  //   _isLoggedIn = false;
-  //   _token = null;
-  //   _user = null;
-  //   notifyListeners();
-  // }
+  Future<void> logout() async {
+    await AuthService.logout();
+    _isLoggedIn = false;
+    _token = null;
+    _user = null;
+    notifyListeners();
+  }
 }
