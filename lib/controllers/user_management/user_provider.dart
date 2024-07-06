@@ -13,20 +13,18 @@ class UserProvider extends ChangeNotifier {
   Future<void> register(String name, String email, String password) async {
     bool isRegistered = await AuthService.register(name, email, password);
     if (isRegistered) {
-      bool isLoggedIn = await login(email, password);
-      if (isLoggedIn) {
-        _isLoggedIn = true;
-        notifyListeners();
-      }
+      await login(email, password);
     }
   }
 
   Future<bool> login(String email, String password) async {
-    bool isLoggedIn = await AuthService.login(email, password);
+    Map<String, dynamic> signInData = await AuthService.login(email, password);
+    bool isLoggedIn = signInData["signin_status"];
+
     if (isLoggedIn) {
-      _isLoggedIn = true;
+      _user = signInData["user_data"];
       _token = await AuthService.getToken();
-      _user = await AuthService.silentLogin();
+      _isLoggedIn = true;
       notifyListeners();
     }
     return isLoggedIn;

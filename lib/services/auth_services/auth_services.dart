@@ -6,7 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class AuthService {
   static final FlutterSecureStorage storage = FlutterSecureStorage();
 
-  static Future<bool> login(String email, String password) async {
+  static Future<Map<String, dynamic>> login(
+      String email, String password) async {
     final url = Uri.parse(
         'http://10.0.2.2:5000/login'); // Replace with your backend URL
 
@@ -20,13 +21,14 @@ class AuthService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final token = data['token'];
+      final userData = data['user_data'];
       // Save the token in local storage or use it for subsequent requests
       await saveAuthToken(token: token);
-      print('Login successful. Token: $token');
-      return true;
+      print('Login successful. user data: $userData');
+      return {"signin_status": true, "user_data": userData};
     } else {
       print('Login failed. Status code: ${response.statusCode}');
-      return false;
+      return {"signin_status": false};
     }
   }
 

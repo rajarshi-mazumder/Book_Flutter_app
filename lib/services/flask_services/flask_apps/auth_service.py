@@ -58,7 +58,16 @@ def login():
     
     if check_password_hash(user.password, auth.password):
         token = create_access_token(identity={'id': user.id}, expires_delta= token_expiration_time)
-        return jsonify({'token': token})
+
+        user_data = {
+            'id': user.id,
+            'name': user.name,
+            'email': user.email,
+            'admin': user.admin,
+            # Add any other user fields you want to return
+        }
+        print({"user_data": user_data})
+        return jsonify({'token': token, "user_data": user_data})
     
     return make_response('Could not verify 3rd', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
