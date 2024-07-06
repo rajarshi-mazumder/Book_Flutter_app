@@ -46,7 +46,8 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("Welcome ${userProvider.user}"),
+            Text(
+                "Welcome ${userProvider.user?.name}, ${userProvider.user?.email}"),
             Container(
               height: 40,
               margin: EdgeInsets.all(generalMargin),

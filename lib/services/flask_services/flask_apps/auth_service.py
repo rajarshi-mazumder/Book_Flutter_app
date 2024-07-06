@@ -42,7 +42,7 @@ def silent_login():
         'admin': current_user.admin,
         # Add any other user fields you want to return
     }
-    return jsonify(user_data), 200
+    return jsonify({"user_data":user_data}), 200
 
 @auth_service.route("/login")
 def login():
@@ -83,7 +83,14 @@ def register():
     
     new_user= create_user_object(name, email, password)
     token = create_access_token(identity={'id': new_user.id}, expires_delta= token_expiration_time)
-    return jsonify({'token': token})
+    user_data = {
+        'id': new_user.id,
+        'name': new_user.name,
+        'email': new_user.email,
+        'admin': new_user.admin,
+        # Add any other user fields you want to return
+    }
+    return jsonify({'token': token, "user_data":user_data})
 
 
 def create_user_object(name, email, password):

@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(userProvider.user.toString()),
+            Text(userProvider.userMap.toString()),
             Form(
               key: _formKey,
               child: Column(

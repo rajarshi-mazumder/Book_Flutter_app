@@ -23,7 +23,7 @@ class AppUser {
   // fromMap factory constructor
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
-      id: map['id'],
+      id: map['id'].toString(),
       name: map['name'],
       email: map['email'],
       admin: map['admin'],
@@ -43,7 +43,7 @@ class AppUser {
   // toMap method
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': int.parse(id),
       'name': name,
       'email': email,
       'admin': admin,
