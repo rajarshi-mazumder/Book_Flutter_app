@@ -8,15 +8,14 @@ from datetime import datetime, timezone, timedelta
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required,  get_jwt_identity
 from functools import wraps
 
-
 auth_service= Blueprint("auth", __name__)
 
 def auth_required(f):
     @wraps(f)
     @jwt_required()
     def decorated(*args, **kwargs):
-        current_user_id = get_jwt_identity()
-        current_user= User.query.filter_by(id= current_user_id["id"]).first()
+        current_user_identity = get_jwt_identity()
+        current_user= User.query.filter_by(id= current_user_identity["id"]).first()
         if not current_user:
             return jsonify({'message':'user not found'})
         
@@ -24,8 +23,23 @@ def auth_required(f):
         return f(current_user, *args, **kwargs)
     
     return decorated
-    
 
+@auth_service.route("/silent_login", methods=["GET"])
+@jwt_required()
+def silent_login():
+    curernt_user_identity= get_jwt_identity()
+    current_user= User.query.filter_by(id= curernt_user_identity["id"]).first()
+    if not current_user:
+        return make_response(jsonify({'message':'user not found'}), 404)
+    
+    user_data = {
+        'id': current_user.id,
+        'name': current_user.name,
+        'email': current_user.email,
+        'admin': current_user.admin,
+        # Add any other user fields you want to return
+    }
+    return jsonify(user_data), 200
 
 @auth_service.route("/login")
 def login():
@@ -44,3 +58,29 @@ def login():
         return jsonify({'token': token})
     
     return make_response('Could not verify 3rd', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+
+@auth_service.route("/register", methods=["POST"])
+def register():
+    data= request.get_json()
+    if not data or not data.get('name') or not data.get('email') or not data.get('password'):
+        return make_response(jsonify({'message': 'Name, email, and password are required!'}), 400)
+
+    name = data['name']
+    email = data['email']
+    password = data['password']
+    
+    return create_user_object(name, email, password)
+
+def create_user_object(name, email, password):
+     # Check if the user already exists
+    if User.query.filter_by(email=email).first():
+        response = make_response(jsonify({'message': 'User already exists!'}), 409)
+        return response
+    
+    hashed_password= generate_password_hash(password, method= "pbkdf2:sha256")
+    admin= False
+    new_user= User(name= name, email= email, password= hashed_password, admin= admin)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({f'message': 'New user created '})

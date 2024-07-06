@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import flask
 from config import Config
 from flask_apps.book_service import books_service
 from flask_apps.user_service import user_service
@@ -6,6 +7,7 @@ from flask_apps.auth_service import auth_service
 from models import db, User
 from flask_jwt_extended import JWTManager, decode_token, jwt_required, get_jwt_identity
 from functools import wraps
+import os
 
 app= Flask(__name__)
 
@@ -61,4 +63,31 @@ def protected():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
+
+
+import functions_framework
+
+@functions_framework.http
+def cors_enabled_function(request):
+    # For more information about CORS and CORS preflight requests, see:
+    # https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
+
+    # Set CORS headers for the preflight request
+    if request.method == "OPTIONS":
+        # Allows GET requests from any origin with the Content-Type
+        # header and caches preflight response for an 3600s
+        headers = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "3600",
+        }
+
+        return ("", 204, headers)
+
+    # Set CORS headers for the main request
+    headers = {"Access-Control-Allow-Origin": "*"}
+
+    return ("Hello World!", 200, headers)

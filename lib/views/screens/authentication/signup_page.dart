@@ -1,13 +1,14 @@
 import 'package:book_frontend/services/auth_services/auth_services.dart';
 import 'package:flutter/material.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -16,11 +17,6 @@ class _SignInScreenState extends State<SignInScreen> {
       final email = _emailController.text;
       final password = _passwordController.text;
       AuthService.login(email, password);
-
-      // print('Email: $email');
-      // print('Password: $password');
-      // AWSServices().registerUser();
-      // AWSServices().loginUser();
     }
   }
 
@@ -29,7 +25,7 @@ class _SignInScreenState extends State<SignInScreen> {
     Map<String, dynamic>? userInfo;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: Text('Sign Up'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -38,8 +34,18 @@ class _SignInScreenState extends State<SignInScreen> {
           child: Column(
             children: <Widget>[
               TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -49,8 +55,8 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Password'),
+                // obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';

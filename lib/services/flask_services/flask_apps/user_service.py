@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timezone, timedelta
 from flask_jwt_extended import JWTManager, create_access_token
-from .auth_service import auth_required
+from .auth_service import auth_required, create_user_object
 
 user_service= Blueprint("users", __name__)
 
@@ -40,19 +40,20 @@ def get_user(user_id):
     user_data["password"]= user.password
     
     return jsonify({'user': user_data})
-  
+
+
+
+
+
 @user_service.route("/users", methods=["POST"])
 def create_user():
     data= request.get_json()
     name=data["name"]
     email= data["email"]
-    hashed_password= generate_password_hash(data["password"], method= "pbkdf2:sha256")
-    admin= False
-    new_user= User(name= name, email= email, password= hashed_password, admin= admin)
-    db.session.add(new_user)
-    db.session.commit()
+    password= data["password"]
+    create_user_object(name, email, password)
     
-    return jsonify({f'message': 'New user created '})
+    
 
 @user_service.route("/users/<int:user_id>/books_started", methods=["POST"])
 def add_user_books_started(user_id):
