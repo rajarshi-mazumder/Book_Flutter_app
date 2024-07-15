@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:book_frontend/controllers/books_management/books_provider.dart';
 import 'package:book_frontend/controllers/books_management/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => CategoriesProvider()),
+        ChangeNotifierProvider(create: (context) => BooksProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

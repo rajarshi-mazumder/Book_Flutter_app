@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/books_management/books_provider.dart';
 import 'package:book_frontend/controllers/books_management/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/books_data.dart';
@@ -18,12 +19,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Book> booksList = sampleBooks;
   List<Book> filteredBooksList = [];
 
-  filterBooksByCategory({required Category categoryToFilterBy}) {
+  filterBooksByCategory(
+      {required BooksProvider booksProvider,
+      required Category categoryToFilterBy}) {
     setState(() {
-      filteredBooksList = sampleBooks.where((book) {
+      filteredBooksList = booksProvider.booksList.where((book) {
         for (Category cat in book.categories!) {
           if (cat.name == categoryToFilterBy.name) return true;
         }
@@ -44,6 +46,12 @@ class _HomePageState extends State<HomePage> {
     categoriesProvider.getCategories(userProvider: userProvider);
   }
 
+  fetchBooks(
+      {required UserProvider userProvider,
+      required BooksProvider booksProvider}) {
+    booksProvider.getBooks(userProvider: userProvider);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,8 +62,13 @@ class _HomePageState extends State<HomePage> {
       CategoriesProvider categoriesProvider =
           Provider.of<CategoriesProvider>(context, listen: false);
 
+      BooksProvider booksProvider =
+          Provider.of<BooksProvider>(context, listen: false);
+
       fetchCategories(
           userProvider: userProvider, categoriesProvider: categoriesProvider);
+
+      fetchBooks(userProvider: userProvider, booksProvider: booksProvider);
     });
   }
 
@@ -64,8 +77,10 @@ class _HomePageState extends State<HomePage> {
     UserProvider userProvider = context.watch<UserProvider>();
     CategoriesProvider categoriesProvider =
         Provider.of<CategoriesProvider>(context);
+    BooksProvider booksProvider = Provider.of<BooksProvider>(context);
 
     List<Category> categories = categoriesProvider.categoriesList;
+
     return Scaffold(
       appBar: Navbar(),
       body: SingleChildScrollView(
@@ -95,7 +110,9 @@ class _HomePageState extends State<HomePage> {
                           child: GestureDetector(
                             child: CategoryTile(category: e),
                             onTap: () {
-                              filterBooksByCategory(categoryToFilterBy: e);
+                              filterBooksByCategory(
+                                  booksProvider: booksProvider,
+                                  categoryToFilterBy: e);
                             },
                           )))
                       .toList()
@@ -105,7 +122,7 @@ class _HomePageState extends State<HomePage> {
             BooksList(
                 booksList: filteredBooksList.isNotEmpty
                     ? filteredBooksList
-                    : booksList),
+                    : booksProvider.booksList),
           ],
         ),
       ),

@@ -1,9 +1,12 @@
+import 'package:book_frontend/controllers/books_management/books_provider.dart';
+import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/book_details_list.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/book_details.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/book_details_widget.dart';
 import 'package:book_frontend/views/screens/shared_widgets/utility_widgets/loading_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BookDetailsPage extends StatefulWidget {
   BookDetailsPage({super.key, required this.bookId, required this.book});
@@ -14,26 +17,34 @@ class BookDetailsPage extends StatefulWidget {
 }
 
 class _BookDetailsPageState extends State<BookDetailsPage> {
-  Future<BookDetails?> fetchBookDetails() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    var temp =
-        bookDetailsList.where((element) => element.bookId == widget.bookId);
-    if (temp.isNotEmpty) {
-      return temp.first;
+  Future<BookDetails?> fetchBookDetails(
+      {required UserProvider userProvider,
+      required BooksProvider booksProvider}) async {
+    Book b = booksProvider.booksList
+        .where((element) => element.bookId == widget.bookId)
+        .first;
+    if (b.bookDetails == null) {
+      booksProvider.getBookDetails(
+          userProvider: userProvider, bookId: int.parse(widget.bookId));
     }
+
+    return b.bookDetails;
   }
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = context.watch<UserProvider>();
+    BooksProvider booksProvider = context.watch<BooksProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text("Book Summarizer"),
       ),
       body: FutureBuilder<BookDetails?>(
-        future: fetchBookDetails(),
+        future: fetchBookDetails(
+            userProvider: userProvider, booksProvider: booksProvider),
         builder: (BuildContext context, AsyncSnapshot<BookDetails?> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data?.chapters != null) {
+            if (snapshot.data != null) {
               return BookDetailsWidget(
                   bookDetails: snapshot.data!, book: widget.book);
             } else {

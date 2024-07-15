@@ -95,7 +95,7 @@ def get_books(current_user):
             'categories': [{'name': category.name} for category in book.categories]
         }
         books_list.append(book_data)
-    return jsonify(books_list)
+    return jsonify({"books": books_list})
 
 @books_service.route("/categories", methods=['GET'])
 def get_categories():
@@ -196,7 +196,7 @@ def add_book_details(id):
     data = request.get_json()
     book = Book.query.get_or_404(id)
 
-    book_chapters = data.get('bookChapters', [])
+    book_chapters = data.get('book_chapters', [])
 
     try:
         # Check if BookDetails already exists for the book
@@ -233,18 +233,12 @@ def get_book_details(id):
     # Prepare the response
     book_data = {
         'id': book.id,
-        'bookId': book.book_id,
-        'title': book.title,
-        'description': book.description,
-        'coverImgPath': book.cover_img_path,
-        'author': {'name': book.author.name} if book.author else None,
-        'categories': [{'name': category.name} for category in book.categories],
-        'bookDetails': {
-            'bookChapters': book_details.book_chapters if book_details else None
+        'book_details': {
+            'book_chapters': book_details.book_chapters if book_details else None
         } if book_details else None
     }
     
-    return jsonify(book_data)
+    return jsonify({"book_data": book_data})
 
 
     

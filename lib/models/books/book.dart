@@ -1,3 +1,5 @@
+import 'package:book_frontend/models/books/book_details.dart';
+
 import 'author.dart';
 import 'category.dart';
 
@@ -8,6 +10,7 @@ class Book {
   String? coverImgPath;
   List<Category>? categories;
   Author? author;
+  BookDetails? bookDetails;
   Book({
     required this.bookId,
     required this.title,
@@ -15,11 +18,12 @@ class Book {
     this.categories,
     this.coverImgPath,
     this.author,
+    this.bookDetails,
   });
 
   factory Book.fromMap(Map<String, dynamic> map) {
     return Book(
-      bookId: map['bookId'],
+      bookId: map['id'].toString(),
       title: map['title'],
       description: map['description'],
       coverImgPath: map['coverImgPath'],
