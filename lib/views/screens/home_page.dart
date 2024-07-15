@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/books_management/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
@@ -37,9 +38,34 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  fetchCategories(
+      {required UserProvider userProvider,
+      required CategoriesProvider categoriesProvider}) {
+    categoriesProvider.getCategories(userProvider: userProvider);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      UserProvider userProvider =
+          Provider.of<UserProvider>(context, listen: false);
+
+      CategoriesProvider categoriesProvider =
+          Provider.of<CategoriesProvider>(context, listen: false);
+
+      fetchCategories(
+          userProvider: userProvider, categoriesProvider: categoriesProvider);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
+    CategoriesProvider categoriesProvider =
+        Provider.of<CategoriesProvider>(context);
+
+    List<Category> categories = categoriesProvider.categoriesList;
     return Scaffold(
       appBar: Navbar(),
       body: SingleChildScrollView(
@@ -57,20 +83,19 @@ class _HomePageState extends State<HomePage> {
                   Container(
                       margin: EdgeInsets.only(right: generalMargin),
                       child: GestureDetector(
-                        child: CategoryTile(category: Category(name: "All")),
+                        child: CategoryTile(
+                            category: Category(name: "All", id: -1)),
                         onTap: () {
                           resetFilteredBooks();
                         },
                       )),
-                  ...categoryMap.entries
+                  ...categories
                       .map((e) => Container(
                           margin: EdgeInsets.only(right: generalMargin),
                           child: GestureDetector(
-                            child: CategoryTile(category: e.value),
+                            child: CategoryTile(category: e),
                             onTap: () {
-                              print(e.value.name);
-                              filterBooksByCategory(
-                                  categoryToFilterBy: e.value);
+                              filterBooksByCategory(categoryToFilterBy: e);
                             },
                           )))
                       .toList()

@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, Blueprint
 from config import Config
-from models.books import db, Book, Author, BookCategory, BookDetails
+from models.books import db, Book, Author, BookCategory, BookDetails, Category
 from .auth_service import auth_required
 
 books_service = Blueprint("services", __name__)
@@ -96,6 +96,22 @@ def get_books(current_user):
         }
         books_list.append(book_data)
     return jsonify(books_list)
+
+@books_service.route("/categories", methods=['GET'])
+def get_categories():
+    categories= Category.query.all()
+
+    categories_map=[]
+
+    for c in categories:
+        categories_map.append({
+            "id": c.id,
+            "name":c.name
+            })
+
+    return jsonify({
+        "categories": categories_map
+    })
 
 @books_service.route('/books/<int:id>', methods=['GET'])
 def get_book(id):
@@ -229,5 +245,6 @@ def get_book_details(id):
     }
     
     return jsonify(book_data)
+
 
     
