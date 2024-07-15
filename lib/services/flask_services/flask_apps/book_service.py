@@ -1,14 +1,11 @@
 from flask import Flask, request, jsonify, Blueprint
 from config import Config
-from models import db, Book, Author, Category
+from models.books import db, Book, Author, BookCategory, BookDetails
+from .auth_service import auth_required
 
 books_service = Blueprint("services", __name__)
 
-
-
 # app = Flask(__name__)
-
-
 
 
 first_request_handled = False
@@ -83,7 +80,8 @@ def create_book():
         return jsonify({'error': str(e)}), 500
 
 @books_service.route('/books', methods=['GET'])
-def get_books():
+@auth_required
+def get_books(current_user):
     books = Book.query.all()
     books_list = []
     for book in books:
@@ -177,5 +175,59 @@ def get_authors():
         author_list.append(author_data)
     return jsonify(author_list)
 
+@books_service.route('/books/<int:id>/details', methods=['POST'])
+def add_book_details(id):
+    data = request.get_json()
+    book = Book.query.get_or_404(id)
 
+    book_chapters = data.get('bookChapters', [])
 
+    try:
+        # Check if BookDetails already exists for the book
+        book_details = BookDetails.query.filter_by(book_id=book.id).first()
+        
+        if not book_details:
+            # Create new BookDetails
+            book_details = BookDetails(
+                book_id=book.id,
+                book_chapters=book_chapters
+            )
+            db.session.add(book_details)
+            db.session.commit()
+            book.book_details_id = book_details.id
+        else:
+            # Update existing BookDetails
+            book_details.book_chapters = book_chapters
+            db.session.commit()
+
+        db.session.commit()
+        return jsonify({'message': 'Book details added/updated successfully'}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+    
+@books_service.route("/books/<int:id>/details", methods=["GET"])
+def get_book_details(id):
+    # Query the book with the given id
+    book = Book.query.get_or_404(id)
+    
+    # Get book details if available
+    book_details = BookDetails.query.filter_by(book_id=book.id).first()
+    
+    # Prepare the response
+    book_data = {
+        'id': book.id,
+        'bookId': book.book_id,
+        'title': book.title,
+        'description': book.description,
+        'coverImgPath': book.cover_img_path,
+        'author': {'name': book.author.name} if book.author else None,
+        'categories': [{'name': category.name} for category in book.categories],
+        'bookDetails': {
+            'bookChapters': book_details.book_chapters if book_details else None
+        } if book_details else None
+    }
+    
+    return jsonify(book_data)
+
+    

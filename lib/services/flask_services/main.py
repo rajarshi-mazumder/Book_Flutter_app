@@ -4,7 +4,8 @@ from config import Config
 from flask_apps.book_service import books_service
 from flask_apps.user_service import user_service
 from flask_apps.auth_service import auth_service
-from models import db, User
+from models.sqlalchemy_setup import db
+from models.users import User
 from flask_jwt_extended import JWTManager, decode_token, jwt_required, get_jwt_identity
 from functools import wraps
 import os

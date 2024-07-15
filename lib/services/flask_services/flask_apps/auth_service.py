@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, Blueprint, make_response
 from config import Config
-from models import db, Book, Author, Category, User
+from models.sqlalchemy_setup import db
+from models.books import  Book, Author, Category
+from models.users import User
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
