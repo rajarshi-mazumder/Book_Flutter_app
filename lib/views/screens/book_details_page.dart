@@ -25,7 +25,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
         .first;
     if (b.bookDetails == null) {
       booksProvider.getBookDetails(
-          userProvider: userProvider, bookId: int.parse(widget.bookId));
+          userProvider: userProvider, book: widget.book);
     }
 
     return b.bookDetails;

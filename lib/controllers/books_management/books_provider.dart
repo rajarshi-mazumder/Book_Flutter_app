@@ -23,27 +23,27 @@ class BooksProvider extends ChangeNotifier {
   /// gets the book's details either from storage if already stored,
   /// if not then get it from API and then store it
   Future<Map<String, dynamic>?> getBookDetails(
-      {required UserProvider userProvider, required int bookId}) async {
+      {required UserProvider userProvider, required Book book}) async {
     // read book if its stored in cache
     Map<String, dynamic>? bookDetails =
-        await readBookDetailsFromStorage(bookId: bookId.toString());
+        await readBookDetailsFromStorage(book: book);
 
     // if book is not stored, then get books using BooksDataMaster.getBookDetails()
     // and then store it in cache
-    if (bookDetails == null) {
+    if (bookDetails?["needToDownload"] == true) {
       Map<String, dynamic>? bookDataMap = await BooksDataMaster.getBookDetails(
-          userProvider: userProvider, bookId: bookId);
+          userProvider: userProvider, bookId: int.parse(book.bookId));
 
       BookDetails? bookDetailsToSave = setBookDetailsInProvider(
-          bookId: bookId.toString(),
+          bookId: book.bookId,
           bookChapters: bookDataMap?["book_details"]["book_chapters"]);
 
-      writeBookDetailsIntoStorage(bookDetails: bookDetailsToSave!);
+      writeBookDetailsIntoStorage(bookDetails: bookDetailsToSave!, book: book);
     }
     // if book is in stored cache, then set provider variable to stored book
     else {
       setBookDetailsInProvider(
-          bookId: bookId.toString(), bookChapters: bookDetails["chapters"]);
+          bookId: book.bookId, bookChapters: bookDetails?["chapters"]);
     }
   }
 
@@ -65,15 +65,16 @@ class BooksProvider extends ChangeNotifier {
   }
 
   // writes the book into storage
-  writeBookDetailsIntoStorage({required BookDetails bookDetails}) {
-    CacheServices().writeBookChapters(bookDetails: bookDetails);
+  writeBookDetailsIntoStorage(
+      {required BookDetails bookDetails, required Book book}) {
+    CacheServices().writeBookChapters(bookDetails: bookDetails, book: book);
   }
 
   // reads the book from storage
   Future<Map<String, dynamic>?> readBookDetailsFromStorage(
-      {required String bookId}) async {
+      {required Book book}) async {
     Map<String, dynamic>? bookDetails =
-        await CacheServices().readBookChapters(bookId: bookId);
+        await CacheServices().readBookChapters(book: book);
     return bookDetails;
   }
 }

@@ -11,6 +11,7 @@ class Book {
   List<Category>? categories;
   Author? author;
   BookDetails? bookDetails;
+  String? detailsHash;
   Book({
     required this.bookId,
     required this.title,
@@ -19,20 +20,21 @@ class Book {
     this.coverImgPath,
     this.author,
     this.bookDetails,
+    this.detailsHash,
   });
 
   factory Book.fromMap(Map<String, dynamic> map) {
     return Book(
-      bookId: map['id'].toString(),
-      title: map['title'],
-      description: map['description'],
-      coverImgPath: map['coverImgPath'],
-      categories: map['categories'] != null
-          ? List<Category>.from(
-              map['categories'].map((x) => Category.fromMap(x)))
-          : null,
-      author: map['author'] != null ? Author.fromMap(map['author']) : null,
-    );
+        bookId: map['id'].toString(),
+        title: map['title'],
+        description: map['description'],
+        coverImgPath: map['coverImgPath'],
+        categories: map['categories'] != null
+            ? List<Category>.from(
+                map['categories'].map((x) => Category.fromMap(x)))
+            : null,
+        author: map['author'] != null ? Author.fromMap(map['author']) : null,
+        detailsHash: map['detailsHash']);
   }
 
   // toMap method
