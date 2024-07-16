@@ -3,6 +3,7 @@ import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/book_details.dart';
 import 'package:book_frontend/services/cache_services/cache_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BooksProvider extends ChangeNotifier {
@@ -11,6 +12,7 @@ class BooksProvider extends ChangeNotifier {
   List<Book> get booksList => _booksList;
 
   getBooks({required UserProvider userProvider}) async {
+    _booksList = [];
     List? booksList =
         await BooksDataMaster.getBooks(userProvider: userProvider);
     booksList?.forEach((element) {
@@ -31,6 +33,9 @@ class BooksProvider extends ChangeNotifier {
     // if book is not stored, then get books using BooksDataMaster.getBookDetails()
     // and then store it in cache
     if (bookDetails?["needToDownload"] == true) {
+      if (kDebugMode) {
+        print("Need to download book ${book.bookId}");
+      }
       Map<String, dynamic>? bookDataMap = await BooksDataMaster.getBookDetails(
           userProvider: userProvider, bookId: int.parse(book.bookId));
 

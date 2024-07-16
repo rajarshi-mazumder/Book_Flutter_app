@@ -1,9 +1,11 @@
+import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/views/screens/book_details_page.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 double BOOK_COVER_WIDTH = 150;
 double BOOK_COVER_HEIGHT = 200;
@@ -20,9 +22,25 @@ class BookTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme appTextTheme = Theme.of(context).textTheme;
+    UserProvider userProvider = context.watch<UserProvider>();
+
+    bool checkIfBookExistsInBooksStarted({required UserProvider userProvider}) {
+      if (userProvider.user! != null &&
+          userProvider.user!.booksStarted != null) {
+        return userProvider.user!.booksStarted!
+            .where((element) => element == book.bookId)
+            .isNotEmpty;
+      } else {
+        return false;
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         if (isTappable) {
+          if (!checkIfBookExistsInBooksStarted(userProvider: userProvider)) {
+            userProvider.addUserBooksStarted(bookId: book.bookId);
+          }
           Navigator.push(
               context,
               MaterialPageRoute(
