@@ -1,3 +1,4 @@
+import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/authentication/signin_page.dart';
 import 'package:book_frontend/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +44,9 @@ class _SilentSignInPageState extends State<SilentSignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child:
-            CircularProgressIndicator(), // Show a loading indicator while attempting silent login
+        child: CircularProgressIndicator(
+          color: primaryColor,
+        ), // Show a loading indicator while attempting silent login
       ),
     );
   }

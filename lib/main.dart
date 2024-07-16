@@ -6,9 +6,13 @@ import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/authentication/silent_signin_page.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+
+  await Hive.openBox("books_data");
   runApp(const MyApp());
 }
 
