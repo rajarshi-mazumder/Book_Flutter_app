@@ -18,7 +18,7 @@ class BooksProvider extends ChangeNotifier {
     booksList?.forEach((element) {
       _booksList.add(Book.fromMap(element));
     });
-
+    sortBooks(booksStarted: userProvider.user?.booksStarted);
     notifyListeners();
   }
 
@@ -81,5 +81,21 @@ class BooksProvider extends ChangeNotifier {
     Map<String, dynamic>? bookDetails =
         await CacheServices().readBookChapters(book: book);
     return bookDetails;
+  }
+
+  sortBooks({List<String>? booksStarted}) {
+    _booksList.sort((a, b) {
+      bool aStarted = booksStarted?.contains(a.bookId) ?? false;
+      bool bStarted = booksStarted?.contains(b.bookId) ?? false;
+
+      // Books that have been started should come before those that haven't
+      if (aStarted && !bStarted) {
+        return -1;
+      } else if (!aStarted && bStarted) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
   }
 }
