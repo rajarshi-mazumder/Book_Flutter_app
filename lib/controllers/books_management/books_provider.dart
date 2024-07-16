@@ -5,6 +5,7 @@ import 'package:book_frontend/models/books/book_details.dart';
 import 'package:book_frontend/services/cache_services/cache_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class BooksProvider extends ChangeNotifier {
   List<Book> _booksList = [];
@@ -83,19 +84,33 @@ class BooksProvider extends ChangeNotifier {
     return bookDetails;
   }
 
-  sortBooks({List<String>? booksStarted}) {
-    _booksList.sort((a, b) {
-      bool aStarted = booksStarted?.contains(a.bookId) ?? false;
-      bool bStarted = booksStarted?.contains(b.bookId) ?? false;
+  void sortBooks({List<Map<String, dynamic>>? booksStarted}) {
+    final dateFormat = DateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
 
-      // Books that have been started should come before those that haven't
-      if (aStarted && !bStarted) {
-        return -1;
-      } else if (!aStarted && bStarted) {
-        return 1;
+    _booksList.sort((a, b) {
+      Map<String, dynamic>? aStarted = booksStarted?.firstWhere(
+          (book) => book['book_id'].toString() == a.bookId,
+          orElse: () => {});
+      Map<String, dynamic>? bStarted = booksStarted?.firstWhere(
+          (book) => book['book_id'].toString() == b.bookId,
+          orElse: () => {});
+
+      if (aStarted!.isNotEmpty && bStarted!.isEmpty) {
+        return -1; // a is started, b is not
+      } else if (aStarted.isEmpty && bStarted!.isNotEmpty) {
+        return 1; // b is started, a is not
+      } else if (aStarted.isNotEmpty && bStarted!.isNotEmpty) {
+        DateTime aDate = aStarted['started_date'].runtimeType == String
+            ? dateFormat.parse(aStarted['started_date'])
+            : aStarted['started_date'];
+        DateTime bDate = bStarted['started_date'].runtimeType == String
+            ? dateFormat.parse(bStarted['started_date'])
+            : bStarted['started_date'];
+        return bDate.compareTo(aDate); // More recently started comes first
       } else {
-        return 0;
+        return 0; // Neither are started
       }
     });
+    notifyListeners();
   }
 }

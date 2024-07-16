@@ -15,7 +15,11 @@ class UserDataMaster {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'books_started': user.booksStarted?.map((e) => int.parse(e)).toList(),
+        'books_started': user.booksStarted
+            ?.map((e) => e["book_id"].runtimeType == int
+                ? e["book_id"]
+                : int.parse(e["book_id"]))
+            .toList(),
       }),
     );
 

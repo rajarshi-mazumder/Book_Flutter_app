@@ -8,7 +8,7 @@ class AppUser {
   bool? admin;
   List<Category>? interestedCategories;
   List<Book>? booksRead;
-  List<String>? booksStarted;
+  List<Map<String, dynamic>>? booksStarted;
 
   AppUser({
     required this.id,
@@ -22,9 +22,9 @@ class AppUser {
 
   // fromMap factory constructor
   factory AppUser.fromMap(Map<String, dynamic> map) {
-    List<String>? tempBooksStarted = [];
+    List<Map<String, dynamic>>? tempBooksStarted = [];
     map["books_started"]
-        .map((x) => tempBooksStarted.add(x.toString()))
+        .map((x) => tempBooksStarted.add(x as Map<String, dynamic>))
         .toList();
 
     return AppUser(

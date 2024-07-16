@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/books_management/books_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
@@ -23,12 +24,12 @@ class BookTile extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme appTextTheme = Theme.of(context).textTheme;
     UserProvider userProvider = context.watch<UserProvider>();
-
+    BooksProvider booksProvider = context.watch<BooksProvider>();
     bool checkIfBookExistsInBooksStarted({required UserProvider userProvider}) {
       if (userProvider.user! != null &&
           userProvider.user!.booksStarted != null) {
         return userProvider.user!.booksStarted!
-            .where((element) => element == book.bookId)
+            .where((element) => element["book_id"].toString() == book.bookId)
             .isNotEmpty;
       } else {
         return false;
@@ -39,7 +40,8 @@ class BookTile extends StatelessWidget {
       onTap: () {
         if (isTappable) {
           if (!checkIfBookExistsInBooksStarted(userProvider: userProvider)) {
-            userProvider.addUserBooksStarted(bookId: book.bookId);
+            userProvider.addUserBooksStarted(
+                bookId: book.bookId, booksProvider: booksProvider);
           }
           Navigator.push(
               context,

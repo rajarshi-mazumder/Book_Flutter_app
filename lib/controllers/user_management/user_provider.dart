@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/books_management/books_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_data_master.dart';
 import 'package:book_frontend/models/books/app_user.dart';
 import 'package:book_frontend/services/auth_services/auth_services.dart';
@@ -65,8 +66,11 @@ class UserProvider extends ChangeNotifier {
     setUser();
   }
 
-  addUserBooksStarted({required String bookId}) {
-    user?.booksStarted?.add(bookId);
+  addUserBooksStarted(
+      {required String bookId, required BooksProvider booksProvider}) {
+    user?.booksStarted
+        ?.add({"book_id": bookId, "started_date": DateTime.now()});
+    booksProvider.sortBooks(booksStarted: user?.booksStarted);
     notifyListeners();
     if (user != null) UserDataMaster.addUserBooksStarted(user: user!);
   }
