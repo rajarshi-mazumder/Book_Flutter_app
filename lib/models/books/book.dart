@@ -28,22 +28,22 @@ class Book {
         bookId: map['id'].toString(),
         title: map['title'],
         description: map['description'],
-        coverImgPath: map['coverImgPath'],
+        coverImgPath: map['cover_img_path'],
         categories: map['categories'] != null
             ? List<Category>.from(
                 map['categories'].map((x) => Category.fromMap(x)))
             : null,
         author: map['author'] != null ? Author.fromMap(map['author']) : null,
-        detailsHash: map['detailsHash']);
+        detailsHash: map['details_hash']);
   }
 
   // toMap method
   Map<String, dynamic> toMap() {
     return {
-      'bookId': bookId,
+      'book_id': bookId,
       'title': title,
       'description': description,
-      'coverImgPath': coverImgPath,
+      'cover_img_path': coverImgPath,
       'categories': categories != null
           ? List<dynamic>.from(categories!.map((x) => x.toMap()))
           : null,
