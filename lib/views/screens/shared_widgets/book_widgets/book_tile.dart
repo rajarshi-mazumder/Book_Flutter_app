@@ -90,11 +90,12 @@ class BookTile extends StatelessWidget {
                   Expanded(
                       child: Text(
                     book.description,
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   )),
+                  const SizedBox(height: 10),
                 if (book.categories != null)
-                  Container(
+                  SizedBox(
                     height: CATEGORY_TILE_HEIGHT,
                     child: ListView(
                       scrollDirection: Axis.horizontal,

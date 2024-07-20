@@ -6,7 +6,7 @@ class AppUser {
   String name;
   String email;
   bool? admin;
-  List<Category>? interestedCategories;
+  List<Map<String, dynamic>>? interestedCategories;
   List<Book>? booksRead;
   List<Map<String, dynamic>>? booksStarted;
 
@@ -27,15 +27,17 @@ class AppUser {
         .map((x) => tempBooksStarted.add(x as Map<String, dynamic>))
         .toList();
 
+  List<Map<String, dynamic>>? tempInterestedCategories = [];
+    map["interested_categories"]
+        .map((x) => tempInterestedCategories.add(x as Map<String, dynamic>))
+        .toList();
+  
     return AppUser(
       id: map['id'].toString(),
       name: map['name'],
       email: map['email'],
       admin: map['admin'],
-      interestedCategories: map['interestedCategories'] != null
-          ? List<Category>.from(
-              map['interestedCategories'].map((x) => Category.fromMap(x)))
-          : null,
+      interestedCategories: tempInterestedCategories,
       booksRead: map['booksRead'] != null
           ? List<Book>.from(map['booksRead'].map((x) => Book.fromMap(x)))
           : null,
@@ -50,9 +52,7 @@ class AppUser {
       'name': name,
       'email': email,
       'admin': admin,
-      'interestedCategories': interestedCategories != null
-          ? List<dynamic>.from(interestedCategories!.map((x) => x.toMap()))
-          : null,
+      'interestedCategories': interestedCategories,
       'booksRead': booksRead != null
           ? List<dynamic>.from(booksRead!.map((x) => x.toMap()))
           : null,

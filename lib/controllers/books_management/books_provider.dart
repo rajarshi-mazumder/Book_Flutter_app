@@ -40,11 +40,13 @@ class BooksProvider extends ChangeNotifier {
       Map<String, dynamic>? bookDataMap = await BooksDataMaster.getBookDetails(
           userProvider: userProvider, bookId: int.parse(book.bookId));
 
-      BookDetails? bookDetailsToSave = setBookDetailsInProvider(
-          bookId: book.bookId,
-          bookChapters: bookDataMap?["book_details"]["book_chapters"]);
-
-      writeBookDetailsIntoStorage(bookDetails: bookDetailsToSave!, book: book);
+      if (bookDataMap != null && bookDataMap!["book_details"] != null) {
+        BookDetails? bookDetailsToSave = setBookDetailsInProvider(
+            bookId: book.bookId,
+            bookChapters: bookDataMap?["book_details"]["book_chapters"]);
+        writeBookDetailsIntoStorage(
+            bookDetails: bookDetailsToSave!, book: book);
+      }
     }
     // if book is in stored cache, then set provider variable to stored book
     else {

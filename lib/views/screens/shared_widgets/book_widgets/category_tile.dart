@@ -4,7 +4,7 @@ import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 
-double CATEGORY_TILE_HEIGHT = 35;
+double CATEGORY_TILE_HEIGHT = 36;
 
 class CategoryTile extends StatelessWidget {
   CategoryTile({super.key, required this.category});

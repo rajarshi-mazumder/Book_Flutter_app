@@ -15,6 +15,30 @@ class CategoriesProvider extends ChangeNotifier {
       _categoriesList.add(Category.fromMap(element));
     });
 
+    sortCategories(categoriesInterested: userProvider.user?.interestedCategories);
+
+    notifyListeners();
+  }
+
+  void sortCategories({List<Map<String, dynamic>>? categoriesInterested}){
+    _categoriesList.sort((a, b){
+    Map<String, dynamic>? aCat = categoriesInterested?.firstWhere(
+              (category) => category['category_id'] == a.id,
+              orElse: () => {});
+   Map<String, dynamic>? bCat = categoriesInterested?.firstWhere(
+              (category) => category['category_id'] == b.id,
+              orElse: () => {});
+
+    if(aCat!.isNotEmpty && bCat!.isNotEmpty){
+      return -1;
+    }
+    else if(aCat.isEmpty && bCat!.isNotEmpty){
+      return 1;
+    }
+    else {
+      return 0;
+    }  
+    });
     notifyListeners();
   }
 }
