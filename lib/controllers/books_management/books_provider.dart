@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/books_management/book_utilities/sort_utitlities';
 import 'package:book_frontend/controllers/books_management/books_data_master.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
@@ -53,6 +54,8 @@ class BooksProvider extends ChangeNotifier {
       setBookDetailsInProvider(
           bookId: book.bookId, bookChapters: bookDetails?["chapters"]);
     }
+
+    return null;
   }
 
   /// sets the book's details in the book object in the _booksList in the provider
@@ -70,6 +73,7 @@ class BooksProvider extends ChangeNotifier {
         return b.bookDetails;
       }
     }
+    return null;
   }
 
   // writes the book into storage
@@ -87,32 +91,8 @@ class BooksProvider extends ChangeNotifier {
   }
 
   void sortBooks({List<Map<String, dynamic>>? booksStarted}) {
-    final dateFormat = DateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
-
-    _booksList.sort((a, b) {
-      Map<String, dynamic>? aStarted = booksStarted?.firstWhere(
-          (book) => book['book_id'].toString() == a.bookId,
-          orElse: () => {});
-      Map<String, dynamic>? bStarted = booksStarted?.firstWhere(
-          (book) => book['book_id'].toString() == b.bookId,
-          orElse: () => {});
-
-      if (aStarted!.isNotEmpty && bStarted!.isEmpty) {
-        return -1; // a is started, b is not
-      } else if (aStarted.isEmpty && bStarted!.isNotEmpty) {
-        return 1; // b is started, a is not
-      } else if (aStarted.isNotEmpty && bStarted!.isNotEmpty) {
-        DateTime aDate = aStarted['started_date'].runtimeType == String
-            ? dateFormat.parse(aStarted['started_date'])
-            : aStarted['started_date'];
-        DateTime bDate = bStarted['started_date'].runtimeType == String
-            ? dateFormat.parse(bStarted['started_date'])
-            : bStarted['started_date'];
-        return bDate.compareTo(aDate); // More recently started comes first
-      } else {
-        return 0; // Neither are started
-      }
-    });
+    _booksList = sortBooksByRelevance(
+        booksStarted: booksStarted, bookListToSort: _booksList);
     notifyListeners();
   }
 }
