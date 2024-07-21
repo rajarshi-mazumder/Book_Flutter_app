@@ -1,3 +1,5 @@
+import 'package:book_frontend/services/cache_services/user_cache_services.dart';
+
 import 'book.dart';
 import 'category.dart';
 
@@ -22,16 +24,14 @@ class AppUser {
 
   // fromMap factory constructor
   factory AppUser.fromMap(Map<String, dynamic> map) {
-    List<Map<String, dynamic>>? tempBooksStarted = [];
-    map["books_started"]
-        .map((x) => tempBooksStarted.add(x as Map<String, dynamic>))
-        .toList();
+    List<Map<String, dynamic>>? tempBooksStarted =
+        UserCacheServices().readUserBooksStarted();
 
-  List<Map<String, dynamic>>? tempInterestedCategories = [];
+    List<Map<String, dynamic>>? tempInterestedCategories = [];
     map["interested_categories"]
         .map((x) => tempInterestedCategories.add(x as Map<String, dynamic>))
         .toList();
-  
+
     return AppUser(
       id: map['id'].toString(),
       name: map['name'],

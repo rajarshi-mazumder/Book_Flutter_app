@@ -13,6 +13,7 @@ void main() async {
   await Hive.initFlutter();
 
   await Hive.openBox("books_data");
+  await Hive.openBox("user_data");
   runApp(const MyApp());
 }
 

@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 
  List<Book> sortBooksByRelevance({List<Map<String, dynamic>>? booksStarted, required List<Book> bookListToSort}) {
     final dateFormat = DateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
-
-    bookListToSort.sort((a, b) {
+    
+    if(booksStarted!=null)
+    {
+      bookListToSort.sort((a, b) {
       Map<String, dynamic>? aStarted = booksStarted?.firstWhere(
           (book) => book['book_id'].toString() == a.bookId,
           orElse: () => {});
@@ -18,7 +20,7 @@ import 'package:intl/intl.dart';
         return -1; // a is started, b is not
       } else if (aStarted.isEmpty && bStarted!.isNotEmpty) {
         return 1; // b is started, a is not
-      } else if (aStarted.isNotEmpty && bStarted!.isNotEmpty) {
+      } else if (aStarted!.isNotEmpty && bStarted!.isNotEmpty) {
         DateTime aDate = aStarted['started_date'].runtimeType == String
             ? dateFormat.parse(aStarted['started_date'])
             : aStarted['started_date'];
@@ -29,7 +31,7 @@ import 'package:intl/intl.dart';
       } else {
         return 0; // Neither are started
       }
-    });
+    });}
     return bookListToSort;
   }
 

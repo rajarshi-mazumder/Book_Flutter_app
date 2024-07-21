@@ -1,6 +1,7 @@
 import 'package:book_frontend/controllers/books_management/books_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
+import 'package:book_frontend/services/cache_services/user_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/views/screens/book_details_page.dart';
@@ -40,9 +41,12 @@ class BookTile extends StatelessWidget {
       onTap: () {
         if (isTappable) {
           if (!checkIfBookExistsInBooksStarted(userProvider: userProvider)) {
+            UserCacheServices()
+                .writeUserBooksStarted(bookIdToSave: book.bookId);
             userProvider.addUserBooksStarted(
                 bookId: book.bookId, booksProvider: booksProvider);
           }
+
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -93,7 +97,7 @@ class BookTile extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   )),
-                  const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 if (book.categories != null)
                   SizedBox(
                     height: CATEGORY_TILE_HEIGHT,
