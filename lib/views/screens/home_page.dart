@@ -91,6 +91,8 @@ class _HomePageState extends State<HomePage> {
                 "Welcome ${userProvider.user?.name}, ${userProvider.user?.email} "),
             Text(
                 '${userProvider.user?.booksStarted?.map((e) => e["book_id"]).toList()}'),
+            Text(
+                '${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
             Container(
               height: 40,
               margin: EdgeInsets.all(generalMargin),

@@ -26,11 +26,8 @@ class AppUser {
   factory AppUser.fromMap(Map<String, dynamic> map) {
     List<Map<String, dynamic>>? tempBooksStarted =
         UserCacheServices().readUserBooksStarted();
-
-    List<Map<String, dynamic>>? tempInterestedCategories = [];
-    map["interested_categories"]
-        .map((x) => tempInterestedCategories.add(x as Map<String, dynamic>))
-        .toList();
+    List<Map<String, dynamic>>? tempInterestedCategories =
+        UserCacheServices().readUserInterestedCategories();
 
     return AppUser(
       id: map['id'].toString(),

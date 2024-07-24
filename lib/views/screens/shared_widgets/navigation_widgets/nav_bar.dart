@@ -1,4 +1,5 @@
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
+import 'package:book_frontend/services/cache_services/user_cache_services.dart';
 import 'package:book_frontend/views/screens/authentication/signin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,16 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         ...additionalActionWidgets ?? [],
         IconButton(
+            onPressed: () {
+              UserCacheServices().deleteUserStoredData();
+            },
+            icon: Icon(Icons.delete)),
+        IconButton(
+            onPressed: () {
+              UserCacheServices().writeUserInterestedCategories(categoryIdToSave: "3");
+            },
+            icon: Icon(Icons.add)),
+        IconButton(
             onPressed: () async {
               await userProvider.logout().then((value) =>
                   Navigator.pushReplacement(
@@ -26,7 +37,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                       MaterialPageRoute(
                           builder: (context) => const SignInPage())));
             },
-            icon: const Icon(Icons.logout))
+            icon: const Icon(Icons.logout)),
       ],
     );
   }

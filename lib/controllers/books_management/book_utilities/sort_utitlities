@@ -37,7 +37,9 @@ import 'package:intl/intl.dart';
 
 
   List<Category> sortCategoriesByRelevance({List<Map<String, dynamic>>? categoriesInterested, required List<Category> categoriesList}){
-    categoriesList.sort((a, b){
+    
+    if(categoriesInterested!=null)
+    {categoriesList.sort((a, b){
     Map<String, dynamic>? aCat = categoriesInterested?.firstWhere(
               (category) => category['category_id'] == a.id,
               orElse: () => {});
@@ -54,7 +56,7 @@ import 'package:intl/intl.dart';
     else {
       return 0;
     }  
-    });
+    });}
     return categoriesList;
    
   }

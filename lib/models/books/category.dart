@@ -5,14 +5,14 @@ class Category {
 
   // fromMap factory constructor
   factory Category.fromMap(Map<String, dynamic> map) {
-    return Category(name: map['name'] ?? "Default", id: map['id'] ?? 0);
+    return Category(name: map['category_name'] ?? "Default", id: map['category_id'] ?? 0);
   }
 
   // toMap method
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
-      'id': id,
+      'category_id': id,
+      'category_name': name,
     };
   }
 }

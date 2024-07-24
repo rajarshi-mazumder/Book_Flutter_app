@@ -1,4 +1,5 @@
 import 'package:book_frontend/controllers/books_management/books_provider.dart';
+import 'package:book_frontend/controllers/books_management/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/services/cache_services/user_cache_services.dart';
@@ -26,9 +27,9 @@ class BookTile extends StatelessWidget {
     TextTheme appTextTheme = Theme.of(context).textTheme;
     UserProvider userProvider = context.watch<UserProvider>();
     BooksProvider booksProvider = context.watch<BooksProvider>();
+    CategoriesProvider categoriesProvider= context.watch<CategoriesProvider>();
     bool checkIfBookExistsInBooksStarted({required UserProvider userProvider}) {
-      if (userProvider.user! != null &&
-          userProvider.user!.booksStarted != null) {
+      if (userProvider.user!.booksStarted != null) {
         return userProvider.user!.booksStarted!
             .where((element) => element["book_id"].toString() == book.bookId)
             .isNotEmpty;
@@ -44,7 +45,8 @@ class BookTile extends StatelessWidget {
             UserCacheServices()
                 .writeUserBooksStarted(bookIdToSave: book.bookId);
             userProvider.addUserBooksStarted(
-                bookId: book.bookId, booksProvider: booksProvider);
+                book: book, booksProvider: booksProvider);
+            userProvider.addUserInterestedCategories(book: book, booksProvider: booksProvider, categoriesProvider: categoriesProvider);
           }
 
           Navigator.push(

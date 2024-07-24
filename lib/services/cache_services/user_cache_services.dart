@@ -35,6 +35,33 @@ class UserCacheServices {
     }
   }
 
+  writeUserInterestedCategories({required String categoryIdToSave}) {
+    try {
+      List<Map<String, dynamic>>? savedInterestedCategories = [];
+      final tempSavedInterestedCategories = _userDataBox?.get('interested_categories');
+
+      if (tempSavedInterestedCategories != null) {
+        for (var t in tempSavedInterestedCategories) {
+          savedInterestedCategories.add(Map<String, dynamic>.from(t));
+        }
+      }
+
+      for (Map<String, dynamic> categoryData in savedInterestedCategories) {
+        if (categoryData["category_id"] == categoryIdToSave) return;
+      }
+
+      savedInterestedCategories.add({
+        "category_id": categoryIdToSave,
+        "interested_date": DateTime.now().toIso8601String()
+      });
+
+      _userDataBox!.put('interested_categories', savedInterestedCategories);
+    } catch (e) {
+      print("Unable to save interested category $e");
+    }
+  }
+
+
   List<Map<String, dynamic>>? readUserBooksStarted() {
     try {
       List<Map<String, dynamic>>? savedBooksStarted = [];
@@ -53,10 +80,42 @@ class UserCacheServices {
     }
   }
 
+  List<Map<String, dynamic>>? readUserInterestedCategories() {
+    try {
+      List<Map<String, dynamic>>? savedInterestedCategories = [];
+      final tempSavedInterstedCategories =
+          _userDataBox?.get('interested_categories');
+
+      if (tempSavedInterstedCategories != null) {
+        for (var t in tempSavedInterstedCategories) {
+          savedInterestedCategories.add(getInterestedCategoryAsMap(t));
+        }
+      }
+
+      return savedInterestedCategories;
+    } catch (e) {
+      print("Could not read saved books");
+      return null;
+    }
+  }
+
   Map<String, dynamic> getBookStartedAsMap(final bookStartedDynamicData) {
     return {
       "book_id": bookStartedDynamicData["book_id"],
       "started_date": bookStartedDynamicData["started_date"]
     };
+  }
+
+  Map<String, dynamic> getInterestedCategoryAsMap(
+      final interestedCategoryDynamicData) {
+    return {
+      "category_id": interestedCategoryDynamicData["category_id"],
+      "interested_date": interestedCategoryDynamicData["interested_date"]
+    };
+  }
+
+  deleteUserStoredData() {
+    _userDataBox?.delete('interested_categories');
+    _userDataBox?.delete('books_started');
   }
 }
