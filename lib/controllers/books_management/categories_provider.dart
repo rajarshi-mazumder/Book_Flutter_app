@@ -2,12 +2,16 @@ import 'package:book_frontend/controllers/books_management/categories_data_maste
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/category.dart';
 import 'package:flutter/material.dart';
-import 'book_utilities/sort_utitlities';
+import 'book_utilities/sort_utilities.dart';
 
 class CategoriesProvider extends ChangeNotifier {
   List<Category> _categoriesList = [];
 
   List<Category> get categoriesList => _categoriesList;
+
+  initActions({required UserProvider userProvider}) {
+    getCategories(userProvider: userProvider);
+  }
 
   getCategories({required UserProvider userProvider}) async {
     List? categoriesList =

@@ -14,3 +14,7 @@ TextStyle? bookNameStyle(TextTheme appTextTheme) => appTextTheme.bodyLarge
 TextStyle? bookNameLargeStyle(TextTheme appTextTheme) =>
     appTextTheme.bodyLarge?.copyWith(
         color: secondaryColor, fontSize: 20, fontWeight: FontWeight.bold);
+
+// header labels
+TextStyle? headerLargeStyle(TextTheme appTextTheme) =>
+    appTextTheme.bodyLarge?.copyWith(fontSize: 20, fontWeight: FontWeight.bold);

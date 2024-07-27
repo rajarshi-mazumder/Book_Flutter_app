@@ -4,17 +4,19 @@ import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 
-double CATEGORY_TILE_HEIGHT = 36;
+const double SHORT_CATEGORY_TILE_HEIGHT = 20;
 
-class CategoryTile extends StatelessWidget {
-  CategoryTile({super.key, required this.category});
-  Category category;
+class ShortCategoryTile extends StatelessWidget {
+  const ShortCategoryTile({super.key, required this.category});
+
+  final Category category;
+
   @override
   Widget build(BuildContext context) {
     TextTheme appTextTheme = Theme.of(context).textTheme;
     return Container(
-        padding: EdgeInsets.all(generalPadding),
-        height: CATEGORY_TILE_HEIGHT,
+        padding: EdgeInsets.symmetric(horizontal: smallPadding),
+        height: SHORT_CATEGORY_TILE_HEIGHT,
         decoration: BoxDecoration(
             color: primaryColor,
             borderRadius: BorderRadius.all(Radius.circular(smallBorderRadius))),

@@ -5,8 +5,11 @@ import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
-import 'package:book_frontend/views/screens/shared_widgets/book_widgets/books_list.dart';
-import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/short_book_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical_book_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/horizontal_books_list.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical_books_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,12 +44,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  fetchCategories(
-      {required UserProvider userProvider,
-      required CategoriesProvider categoriesProvider}) {
-    categoriesProvider.getCategories(userProvider: userProvider);
-  }
-
   fetchBooks(
       {required UserProvider userProvider,
       required BooksProvider booksProvider}) {
@@ -63,34 +60,34 @@ class _HomePageState extends State<HomePage> {
       CategoriesProvider categoriesProvider =
           Provider.of<CategoriesProvider>(context, listen: false);
 
+      categoriesProvider.initActions(userProvider: userProvider);
       BooksProvider booksProvider =
           Provider.of<BooksProvider>(context, listen: false);
 
-      fetchCategories(
-          userProvider: userProvider, categoriesProvider: categoriesProvider);
-
-      fetchBooks(userProvider: userProvider, booksProvider: booksProvider);
+      booksProvider.initActions(userProvider: userProvider);
 
       _scrollController.addListener(() {
         if (_scrollController.position.atEdge) {
           if (_scrollController.position.pixels != 0) {
             // User has scrolled to the bottom
             UserProvider userProvider =
-            Provider.of<UserProvider>(context, listen: false);
+                Provider.of<UserProvider>(context, listen: false);
             BooksProvider booksProvider =
-            Provider.of<BooksProvider>(context, listen: false);
-            fetchBooks(userProvider: userProvider, booksProvider: booksProvider);
+                Provider.of<BooksProvider>(context, listen: false);
+            fetchBooks(
+                userProvider: userProvider, booksProvider: booksProvider);
           }
         }
       });
-
     });
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
@@ -106,6 +103,7 @@ class _HomePageState extends State<HomePage> {
         controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
                 "Welcome ${userProvider.user?.name}, ${userProvider.user?.email} "),
@@ -143,7 +141,9 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            BooksList(
+            RecommendedBooksHeader(),
+            HorizontalBooksList(booksList: booksProvider.recommendedBooks),
+            VerticalBooksList(
                 booksList: filteredBooksList.isNotEmpty
                     ? filteredBooksList
                     : booksProvider.booksList),

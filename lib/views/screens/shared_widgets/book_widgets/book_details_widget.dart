@@ -2,13 +2,15 @@ import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/book_details.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/book_chapter_page_view.dart';
-import 'package:book_frontend/views/screens/shared_widgets/book_widgets/book_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical_book_tile.dart';
 import 'package:flutter/material.dart';
 
 class BookDetailsWidget extends StatelessWidget {
   BookDetailsWidget({super.key, required this.book, required this.bookDetails});
+
   BookDetails bookDetails;
   Book book;
+
   @override
   Widget build(BuildContext context) {
     TextTheme appTextTheme = Theme.of(context).textTheme;

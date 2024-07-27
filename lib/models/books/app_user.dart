@@ -3,6 +3,12 @@ import 'package:book_frontend/services/cache_services/user_cache_services.dart';
 import 'book.dart';
 import 'category.dart';
 
+// default data
+List<Map<String, dynamic>> defaultInterestedCategories = [
+  {"category_id": "1", "date_interested": DateTime.now},
+  {"category_id": "2", "date_interested": DateTime.now},
+];
+
 class AppUser {
   String id;
   String name;
@@ -34,7 +40,10 @@ class AppUser {
       name: map['name'],
       email: map['email'],
       admin: map['admin'],
-      interestedCategories: tempInterestedCategories,
+      interestedCategories:
+          (tempInterestedCategories == null || tempInterestedCategories.isEmpty)
+              ? defaultInterestedCategories
+              : tempInterestedCategories,
       booksRead: map['booksRead'] != null
           ? List<Book>.from(map['booksRead'].map((x) => Book.fromMap(x)))
           : null,

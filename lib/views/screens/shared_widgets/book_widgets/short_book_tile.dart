@@ -6,28 +6,32 @@ import 'package:book_frontend/services/cache_services/user_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/views/screens/book_details_page.dart';
-import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/short_category_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-double BOOK_COVER_WIDTH = 150;
-double BOOK_COVER_HEIGHT = 200;
+const double SHORT_BOOK_TILE_WIDTH = 150;
+const double SHORT_BOOK_TILE_HEIGHT = 200;
 
-class BookTile extends StatelessWidget {
-  BookTile(
+//ignore: must_be_immutable
+class ShortBookTile extends StatelessWidget {
+  ShortBookTile(
       {super.key,
       required this.book,
       this.isTappable = true,
       this.showDescription = true});
-  Book book;
+
+  final Book book;
   bool isTappable;
-  bool showDescription;
+  final bool showDescription;
+
   @override
   Widget build(BuildContext context) {
     TextTheme appTextTheme = Theme.of(context).textTheme;
     UserProvider userProvider = context.watch<UserProvider>();
     BooksProvider booksProvider = context.watch<BooksProvider>();
-    CategoriesProvider categoriesProvider= context.watch<CategoriesProvider>();
+    CategoriesProvider categoriesProvider = context.watch<CategoriesProvider>();
     bool checkIfBookExistsInBooksStarted({required UserProvider userProvider}) {
       if (userProvider.user!.booksStarted != null) {
         return userProvider.user!.booksStarted!
@@ -46,7 +50,10 @@ class BookTile extends StatelessWidget {
                 .writeUserBooksStarted(bookIdToSave: book.bookId);
             userProvider.addUserBooksStarted(
                 book: book, booksProvider: booksProvider);
-            userProvider.addUserInterestedCategories(book: book, booksProvider: booksProvider, categoriesProvider: categoriesProvider);
+            userProvider.addUserInterestedCategories(
+                book: book,
+                booksProvider: booksProvider,
+                categoriesProvider: categoriesProvider);
           }
 
           Navigator.push(
@@ -57,16 +64,16 @@ class BookTile extends StatelessWidget {
         }
       },
       child: Container(
-        height: 200,
+        height: SHORT_BOOK_TILE_HEIGHT,
+        width: SHORT_BOOK_TILE_WIDTH,
         margin: EdgeInsets.all(generalMargin),
-        padding: EdgeInsets.all(generalPadding),
-        child: Row(children: [
+        child: Stack(children: [
           ClipRRect(
             borderRadius:
                 BorderRadius.all(Radius.circular(generalBorderRadius)),
             child: SizedBox(
-              width: BOOK_COVER_WIDTH,
-              height: BOOK_COVER_HEIGHT,
+              width: SHORT_BOOK_TILE_WIDTH,
+              height: SHORT_BOOK_TILE_HEIGHT,
               child: Image.network(
                 book.coverImgPath ?? "",
                 errorBuilder: (context, object, stackTrace) => Image.network(
@@ -77,43 +84,51 @@ class BookTile extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(
+            bottom: 0,
+            child: ClipRRect(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(generalBorderRadius)),
+              child: Container(
+                width: SHORT_BOOK_TILE_WIDTH,
+                height: SHORT_BOOK_TILE_HEIGHT / 2,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                      Colors.black.withOpacity(0),
+                      Colors.black.withOpacity(0.8)
+                    ])),
+              ),
+            ),
+          ),
           const SizedBox(width: 20),
-          Expanded(
+          Container(
+            margin: EdgeInsets.symmetric(
+                vertical: generalMargin, horizontal: generalMargin),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                if (book.categories != null)
+                  SizedBox(
+                    height: SHORT_CATEGORY_TILE_HEIGHT,
+                    child: Row(
+                      children: [
+                        book.categories!
+                            .map((e) => Container(
+                                  margin: EdgeInsets.only(right: generalMargin),
+                                  child: ShortCategoryTile(category: e),
+                                ))
+                            .toList()
+                            .first
+                      ],
+                    ),
+                  ),
                 Text(
                   book.title,
                   style: bookNameStyle(appTextTheme),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  book.author?.name ?? "anonymous",
-                  style: prominentTextStyle(appTextTheme),
-                ),
-                const SizedBox(height: 10),
-                if (showDescription)
-                  Expanded(
-                      child: Text(
-                    book.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-                const SizedBox(height: 10),
-                if (book.categories != null)
-                  SizedBox(
-                    height: CATEGORY_TILE_HEIGHT,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      children: book.categories!
-                          .map((e) => Container(
-                                margin: EdgeInsets.only(right: generalMargin),
-                                child: CategoryTile(category: e),
-                              ))
-                          .toList(),
-                    ),
-                  )
               ],
             ),
           )
