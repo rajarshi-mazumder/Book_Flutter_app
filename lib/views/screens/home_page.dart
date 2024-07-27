@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Book> filteredBooksList = [];
+  final ScrollController _scrollController = ScrollController();
 
   filterBooksByCategory(
       {required BooksProvider booksProvider,
@@ -69,9 +70,27 @@ class _HomePageState extends State<HomePage> {
           userProvider: userProvider, categoriesProvider: categoriesProvider);
 
       fetchBooks(userProvider: userProvider, booksProvider: booksProvider);
+
+      _scrollController.addListener(() {
+        if (_scrollController.position.atEdge) {
+          if (_scrollController.position.pixels != 0) {
+            // User has scrolled to the bottom
+            UserProvider userProvider =
+            Provider.of<UserProvider>(context, listen: false);
+            BooksProvider booksProvider =
+            Provider.of<BooksProvider>(context, listen: false);
+            fetchBooks(userProvider: userProvider, booksProvider: booksProvider);
+          }
+        }
+      });
+
     });
   }
-
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
@@ -84,6 +103,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: Navbar(),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

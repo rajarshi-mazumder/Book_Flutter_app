@@ -10,18 +10,29 @@ import 'package:intl/intl.dart';
 
 class BooksProvider extends ChangeNotifier {
   List<Book> _booksList = [];
+  int _booksPaginationNumber=1;
+  bool hasNext= true;
 
   List<Book> get booksList => _booksList;
+  int get booksPaginationNumber => _booksPaginationNumber;
 
-  getBooks({required UserProvider userProvider}) async {
-    _booksList = [];
-    List? booksList =
-        await BooksDataMaster.getBooks(userProvider: userProvider);
-    booksList?.forEach((element) {
-      _booksList.add(Book.fromMap(element));
-    });
-    sortBooks(booksStarted: userProvider.user?.booksStarted);
-    notifyListeners();
+  Future<void> getBooks({required UserProvider userProvider}) async {
+    if(!hasNext) {
+      return;
+    }
+    Map<String, dynamic>? booksListData= await BooksDataMaster.getBooks(userProvider: userProvider, booksPaginationNumber: booksPaginationNumber);
+
+    List? booksList =booksListData?["books"];
+    hasNext= booksListData?["has_next"];
+
+    if(booksList!=null) {
+      for (var element in booksList) {
+        _booksList.add(Book.fromMap(element));
+      }
+      _booksPaginationNumber+=1;
+      sortBooks(booksStarted: userProvider.user?.booksStarted);
+      notifyListeners();
+    }
   }
 
   /// gets the book's details either from storage if already stored,
