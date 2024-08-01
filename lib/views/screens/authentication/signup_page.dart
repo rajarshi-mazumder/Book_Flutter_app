@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/services/auth_services/auth_services.dart';
 import 'package:book_frontend/views/screens/home_page.dart';
@@ -20,9 +21,19 @@ class _SignUpPageState extends State<SignUpPage> {
       final name = _nameController.text;
       final email = _emailController.text;
       final password = _passwordController.text;
-      await userProvider.register(name, email, password);
+      Map<String, dynamic>? appData =
+          await userProvider.register(name, email, password);
+      _setUpdateData(appData);
       _navigateBasedOnLoginStatus(userProvider.isLoggedIn);
     }
+  }
+
+  void _setUpdateData(Map<String, dynamic>? appData) {
+    if (appData == null) return;
+    AppDataProvider appDataProvider =
+        Provider.of<AppDataProvider>(context, listen: false);
+    appDataProvider.updateLastBooksListVersion(
+        newBooksListVersion: appData["last_books_list_version"]);
   }
 
   void _navigateBasedOnLoginStatus(bool isLoggedIn) {

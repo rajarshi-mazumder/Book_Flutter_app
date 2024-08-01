@@ -8,7 +8,9 @@ class BooksDataMaster {
   static const baseurl = "http://10.0.2.2:5000";
   static final FlutterSecureStorage storage = FlutterSecureStorage();
 
-  static Future<Map<String, dynamic>?> getBooks({required UserProvider userProvider, required int booksPaginationNumber}) async {
+  static Future<Map<String, dynamic>?> getBooks(
+      {required UserProvider userProvider,
+      required int booksPaginationNumber}) async {
     final url = Uri.parse("$baseurl/books?page=$booksPaginationNumber");
     final token = await storage.read(key: 'jwt_token');
 
@@ -17,7 +19,7 @@ class BooksDataMaster {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return {"books": data["books"], "has_next": data["has_next"]};
+      return {"books": data["books"]};
     }
   }
 

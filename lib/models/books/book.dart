@@ -1,17 +1,36 @@
-import 'package:book_frontend/models/books/book_details.dart';
-
+import 'package:hive/hive.dart';
 import 'author.dart';
 import 'category.dart';
+import 'book_details.dart';
 
-class Book {
+part 'book.g.dart';
+
+@HiveType(typeId: 0)
+class Book extends HiveObject {
+  @HiveField(0)
   String bookId;
+
+  @HiveField(1)
   String title;
+
+  @HiveField(2)
   String description;
+
+  @HiveField(3)
   String? coverImgPath;
+
+  @HiveField(4)
   List<Category>? categories;
+
+  @HiveField(5)
   Author? author;
+
+  @HiveField(6)
   BookDetails? bookDetails;
+
+  @HiveField(7)
   String? detailsHash;
+
   Book({
     required this.bookId,
     required this.title,
@@ -25,16 +44,17 @@ class Book {
 
   factory Book.fromMap(Map<String, dynamic> map) {
     return Book(
-        bookId: map['id'].toString(),
-        title: map['title'],
-        description: map['description'],
-        coverImgPath: map['cover_img_path'],
-        categories: map['categories'] != null
-            ? List<Category>.from(
-                map['categories'].map((x) => Category.fromMap(x)))
-            : null,
-        author: map['author'] != null ? Author.fromMap(map['author']) : null,
-        detailsHash: map['details_hash']);
+      bookId: map['id'].toString(),
+      title: map['title'],
+      description: map['description'],
+      coverImgPath: map['cover_img_path'],
+      categories: map['categories'] != null
+          ? List<Category>.from(
+              map['categories'].map((x) => Category.fromMap(x)))
+          : null,
+      author: map['author'] != null ? Author.fromMap(map['author']) : null,
+      detailsHash: map['details_hash'],
+    );
   }
 
   // toMap method

@@ -29,11 +29,16 @@ class AuthService {
       final data = jsonDecode(response.body);
       final token = data['token'];
       final userData = data['user_data'];
+      final appData = data['app_data'];
 
       // Save the token in local storage or use it for subsequent requests
       await saveAuthToken(token: token);
 
-      return {"signin_status": true, "user_data": userData};
+      return {
+        "signin_status": true,
+        "user_data": userData,
+        "app_data": appData
+      };
     } else {
       logger.e("login failed ${response.statusCode}");
       return {"signin_status": false};
@@ -62,10 +67,15 @@ class AuthService {
       final data = jsonDecode(response.body);
       final token = data['token'];
       final userData = data['user_data'];
+      final appData = data['app_data'];
       // Save the token in local storage or use it for subsequent requests
       await saveAuthToken(token: token);
 
-      return {"signup_status": true, "user_data": userData};
+      return {
+        "signup_status": true,
+        "user_data": userData,
+        "app_data": appData
+      };
     } else {
       logger.e("sign up failed");
       return {"signup_status": false};
@@ -94,7 +104,10 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data["user_data"];
+        final userData = data['user_data'];
+        final appData = data['app_data'];
+
+        return {"user_data": userData, "app_data": appData};
       } else {
         logger.e('Silent login failed. Status code: ${response.statusCode}');
       }

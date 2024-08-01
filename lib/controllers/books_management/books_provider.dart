@@ -30,15 +30,15 @@ class BooksProvider extends ChangeNotifier {
   }
 
   Future<void> getBooks({required UserProvider userProvider}) async {
-    if (!hasNext) {
-      return;
-    }
+    // if (!hasNext) {
+    //   return;
+    // }
     Map<String, dynamic>? booksListData = await BooksDataMaster.getBooks(
         userProvider: userProvider,
         booksPaginationNumber: booksPaginationNumber);
 
     List? booksList = booksListData?["books"];
-    hasNext = booksListData?["has_next"];
+    // hasNext = booksListData?["has_next"];
 
     if (booksList != null) {
       for (var element in booksList) {

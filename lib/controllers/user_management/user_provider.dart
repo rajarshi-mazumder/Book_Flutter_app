@@ -15,13 +15,17 @@ class UserProvider extends ChangeNotifier {
   AppUser? _user;
 
   bool get isLoggedIn => _isLoggedIn;
+
   String? get token => _token;
+
   Map<String, dynamic>? get userMap => _userMap;
+
   AppUser? get user => _user;
 
   /// registers user and gets the token and user_data
   /// by calling AuthServices.register()
-  Future<void> register(String name, String email, String password) async {
+  Future<Map<String, dynamic>?> register(
+      String name, String email, String password) async {
     Map<String, dynamic> signUpData =
         await AuthService.register(name, email, password);
 
@@ -30,35 +34,47 @@ class UserProvider extends ChangeNotifier {
     if (isRegistered) {
       _userMap = signUpData["user_data"];
       _token = await AuthService.getToken();
+      Map<String, dynamic>? appData = signUpData["app_data"];
+
       _isLoggedIn = true;
       notifyListeners();
       setUser();
+      return appData;
     }
+    return null;
   }
 
   /// logs the user in, and gets the token and user_data
   /// by calling AuthServices.login()
-  Future<void> login(String email, String password) async {
+  Future<Map<String, dynamic>?> login(String email, String password) async {
     Map<String, dynamic> signInData = await AuthService.login(email, password);
     bool isLoggedIn = signInData["signin_status"];
 
     if (isLoggedIn) {
       _userMap = signInData["user_data"];
       _token = await AuthService.getToken();
+      Map<String, dynamic>? appData = signInData?["app_data"];
+
       _isLoggedIn = true;
       notifyListeners();
+      setUser();
+      return appData;
     }
-    setUser();
+    return null;
   }
 
   /// silently logs in the user by calling AuthService.silentLogin()
-  Future<void> silentLogin() async {
-    _userMap = await AuthService.silentLogin();
+  Future<Map<String, dynamic>?> silentLogin() async {
+    Map<String, dynamic>? silentSignInData = await AuthService.silentLogin();
+    _userMap = silentSignInData?["user_data"];
+    Map<String, dynamic>? appData = silentSignInData?["app_data"];
+
     if (_userMap != null) {
       _isLoggedIn = true;
       notifyListeners();
     }
     setUser();
+    return appData;
   }
 
   Future<void> logout() async {
@@ -80,7 +96,7 @@ class UserProvider extends ChangeNotifier {
 
     if (user != null) {
       UserCacheServices().writeUserBooksStarted(bookIdToSave: book.bookId);
-   }
+    }
 
     notifyListeners();
   }
@@ -88,9 +104,10 @@ class UserProvider extends ChangeNotifier {
   // adds category to interested categories after checking if category already exists
   // in list of interested categories or not
   // also sorts the categoriesList in categories provider
-  addUserInterestedCategories({required Book book, required BooksProvider booksProvider,
-  required CategoriesProvider categoriesProvider
-  }){
+  addUserInterestedCategories(
+      {required Book book,
+      required BooksProvider booksProvider,
+      required CategoriesProvider categoriesProvider}) {
     if (book.categories != null) {
       for (Category cat in book.categories!) {
         bool flag = false;
@@ -104,8 +121,10 @@ class UserProvider extends ChangeNotifier {
         }
 
         if (!flag) {
-          user?.interestedCategories?.add({"category_id": cat.id, "interested_date": DateTime.now()});
-          categoriesProvider.sortCategories(categoriesInterested: user?.interestedCategories);
+          user?.interestedCategories
+              ?.add({"category_id": cat.id, "interested_date": DateTime.now()});
+          categoriesProvider.sortCategories(
+              categoriesInterested: user?.interestedCategories);
           UserCacheServices().writeUserInterestedCategories(
               categoryIdToSave: cat.id.toString());
           notifyListeners();

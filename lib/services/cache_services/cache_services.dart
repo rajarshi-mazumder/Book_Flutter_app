@@ -7,9 +7,32 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class CacheServices {
   Box? _bookDataBox;
+  Box<Book>? _allBooksBox;
+
   CacheServices() {
     _bookDataBox = Hive.box('books_data');
+    _allBooksBox = Hive.box('all_books');
   }
+
+  Future<void> writeAllBooks({required List<Book> booksList}) async {
+    // Iterate through the list of books and add each book to the box
+    for (var book in booksList) {
+      try {
+        await _allBooksBox?.add(book);
+      } catch (e) {
+        print("book ${book.title} already exists");
+      }
+    }
+    readAllBooks();
+  }
+
+  Future<List<Book>?> readAllBooks() async {
+    // Retrieve all books from the box and convert them to a list
+    List<Book>? books = _allBooksBox?.values.toList();
+
+    return books;
+  }
+
   writeBookChapters(
       {required BookDetails bookDetails, required Book book}) async {
     // Write the file
@@ -50,6 +73,7 @@ class CacheServices {
   }
 
   deleteBookChapters({required String bookId}) {
+    _allBooksBox?.delete('all_books');
     _bookDataBox?.delete('book_$bookId');
     _bookDataBox?.delete('book_${bookId}_details_hash');
   }

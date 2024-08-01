@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/books_provider.dart';
 import 'package:book_frontend/controllers/books_management/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
@@ -24,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Book> filteredBooksList = [];
   final ScrollController _scrollController = ScrollController();
+  String? _lastBooksListVersion;
 
   filterBooksByCategory(
       {required BooksProvider booksProvider,
@@ -44,18 +46,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  fetchBooks(
-      {required UserProvider userProvider,
-      required BooksProvider booksProvider}) {
-    booksProvider.getBooks(userProvider: userProvider);
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
+
+      AppDataProvider appDataProvider =
+          Provider.of<AppDataProvider>(context, listen: false);
+
+      _lastBooksListVersion = appDataProvider.lastBooksListVersion;
 
       CategoriesProvider categoriesProvider =
           Provider.of<CategoriesProvider>(context, listen: false);
@@ -66,19 +67,18 @@ class _HomePageState extends State<HomePage> {
 
       booksProvider.initActions(userProvider: userProvider);
 
-      _scrollController.addListener(() {
-        if (_scrollController.position.atEdge) {
-          if (_scrollController.position.pixels != 0) {
-            // User has scrolled to the bottom
-            UserProvider userProvider =
-                Provider.of<UserProvider>(context, listen: false);
-            BooksProvider booksProvider =
-                Provider.of<BooksProvider>(context, listen: false);
-            fetchBooks(
-                userProvider: userProvider, booksProvider: booksProvider);
-          }
-        }
-      });
+      // _scrollController.addListener(() {
+      //   if (_scrollController.position.atEdge) {
+      //     if (_scrollController.position.pixels != 0) {
+      //       // User has scrolled to the bottom
+      //       UserProvider userProvider =
+      //           Provider.of<UserProvider>(context, listen: false);
+      //       BooksProvider booksProvider =
+      //           Provider.of<BooksProvider>(context, listen: false);
+      //       booksProvider.initActions(userProvider: userProvider);
+      //     }
+      //   }
+      // });
     });
   }
 
@@ -93,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     UserProvider userProvider = context.watch<UserProvider>();
     CategoriesProvider categoriesProvider =
         Provider.of<CategoriesProvider>(context);
+
     BooksProvider booksProvider = Provider.of<BooksProvider>(context);
 
     List<Category> categories = categoriesProvider.categoriesList;
@@ -111,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                 '${userProvider.user?.booksStarted?.map((e) => e["book_id"]).toList()}'),
             Text(
                 '${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
+            Text(_lastBooksListVersion.toString()),
             Container(
               height: 40,
               margin: EdgeInsets.all(generalMargin),
