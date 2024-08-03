@@ -1,4 +1,4 @@
-import 'package:book_frontend/controllers/books_management/books_provider.dart';
+import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/book_details_list.dart';
 import 'package:book_frontend/models/books/book.dart';
@@ -10,8 +10,10 @@ import 'package:provider/provider.dart';
 
 class BookDetailsPage extends StatefulWidget {
   BookDetailsPage({super.key, required this.bookId, required this.book});
+
   String bookId;
   Book book;
+
   @override
   State<BookDetailsPage> createState() => _BookDetailsPageState();
 }
@@ -25,7 +27,9 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
         .first;
     if (b.bookDetails == null) {
       booksProvider.getBookDetails(
-          userProvider: userProvider, book: widget.book);
+          booksList: booksProvider.booksList,
+          userProvider: userProvider,
+          book: widget.book);
     }
 
     return b.bookDetails;

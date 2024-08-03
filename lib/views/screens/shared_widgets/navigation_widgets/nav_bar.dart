@@ -1,4 +1,4 @@
-import 'package:book_frontend/controllers/books_management/books_provider.dart';
+import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/services/cache_services/cache_services.dart';
 import 'package:book_frontend/services/cache_services/user_cache_services.dart';

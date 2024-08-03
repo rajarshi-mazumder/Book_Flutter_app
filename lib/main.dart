@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
-import 'package:book_frontend/controllers/books_management/books_provider.dart';
+import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/controllers/books_management/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
@@ -21,6 +21,7 @@ void main() async {
   Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(AuthorAdapter());
 
+  await Hive.openBox("app_data");
   await Hive.openBox("books_data");
   await Hive.openBox("user_data");
 
