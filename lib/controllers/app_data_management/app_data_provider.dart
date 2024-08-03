@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 
 class AppDataProvider extends ChangeNotifier {
   String? _lastBooksListVersion;
-  bool _shouldFetchBooks = false;
+
+  String? _lastCategoriesListVersion;
 
   String? get lastBooksListVersion => _lastBooksListVersion;
 
-  bool? get shouldFetchBooks => _shouldFetchBooks;
+  String? get lastCategoriesListVersion => _lastCategoriesListVersion;
 
   updateLastBooksListVersion({required String newBooksListVersion}) {
     _lastBooksListVersion = newBooksListVersion;
@@ -16,5 +17,15 @@ class AppDataProvider extends ChangeNotifier {
 
   bool checkIfShouldFetchBooks() {
     return AppCacheServices().readLastBooksVersion() != lastBooksListVersion;
+  }
+
+  updateLastCategoriesListVersion({required String newCategoriesListVersion}) {
+    _lastCategoriesListVersion = newCategoriesListVersion;
+    notifyListeners();
+  }
+
+  bool checkIfShouldFetchCategories() {
+    return AppCacheServices().readLastCategoriesVersion() !=
+        lastCategoriesListVersion;
   }
 }

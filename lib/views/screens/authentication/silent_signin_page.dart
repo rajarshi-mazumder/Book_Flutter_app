@@ -1,5 +1,6 @@
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
+import 'package:book_frontend/views/screens/authentication/app_data_utility_functions.dart';
 import 'package:book_frontend/views/screens/authentication/signin_page.dart';
 import 'package:book_frontend/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
@@ -23,17 +24,11 @@ class _SilentSignInPageState extends State<SilentSignInPage> {
   void _attemptSilentLogin() async {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
-    Map<String, dynamic>? appData = await userProvider.silentLogin();
-    _setUpdateData(appData);
-    _navigateBasedOnLoginStatus(userProvider.isLoggedIn);
-  }
 
-  void _setUpdateData(Map<String, dynamic>? appData) {
-    if (appData == null) return;
-    AppDataProvider appDataProvider =
-        Provider.of<AppDataProvider>(context, listen: false);
-    appDataProvider.updateLastBooksListVersion(
-        newBooksListVersion: appData["last_books_list_version"]);
+    await userProvider.silentLogin().then((appData) {
+      setAppData(appData, context);
+      _navigateBasedOnLoginStatus(userProvider.isLoggedIn);
+    });
   }
 
   void _navigateBasedOnLoginStatus(bool isLoggedIn) {

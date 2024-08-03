@@ -1,5 +1,5 @@
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
-import 'package:book_frontend/controllers/books_management/categories_provider.dart';
+import 'package:book_frontend/controllers/books_management/categories_provider/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/services/cache_services/user_cache_services.dart';

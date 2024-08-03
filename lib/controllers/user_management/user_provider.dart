@@ -1,5 +1,5 @@
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
-import 'package:book_frontend/controllers/books_management/categories_provider.dart';
+import 'package:book_frontend/controllers/books_management/categories_provider/categories_provider.dart';
 import 'package:book_frontend/data/book_chapters/LOTR_3.dart';
 import 'package:book_frontend/models/books/app_user.dart';
 import 'package:book_frontend/models/books/book.dart';

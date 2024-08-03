@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
-import 'package:book_frontend/controllers/books_management/categories_provider.dart';
+import 'package:book_frontend/controllers/books_management/categories_provider/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/authentication/silent_signin_page.dart';
@@ -26,6 +26,7 @@ void main() async {
   await Hive.openBox("user_data");
 
   Hive.openBox<Book>('all_books');
+  Hive.openBox<Category>('all_categories');
 
   runApp(const MyApp());
 }

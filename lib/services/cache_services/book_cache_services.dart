@@ -74,7 +74,7 @@ class BookCacheServices {
   }
 
   deleteBooksListCache() {
-    _allBooksBox?.delete('all_books');
+    _allBooksBox?.clear();
   }
 
   deleteAllBookCache({required BooksProvider booksProvider}) {

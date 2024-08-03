@@ -38,12 +38,6 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
             },
             icon: Icon(Icons.add)),
         IconButton(
-            onPressed: () {
-              BookCacheServices()
-                  .writeAllBooks(booksList: booksProvider.booksList);
-            },
-            icon: Icon(Icons.menu_book_outlined)),
-        IconButton(
             onPressed: () async {
               await userProvider.logout().then((value) =>
                   Navigator.pushReplacement(

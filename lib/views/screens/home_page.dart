@@ -1,6 +1,6 @@
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
-import 'package:book_frontend/controllers/books_management/categories_provider.dart';
+import 'package:book_frontend/controllers/books_management/categories_provider/categories_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   List<Book> filteredBooksList = [];
   final ScrollController _scrollController = ScrollController();
   String? _lastBooksListVersion;
+  String? _lastCategoriesListVersion;
 
   filterBooksByCategory(
       {required BooksProvider booksProvider,
@@ -59,11 +60,13 @@ class _HomePageState extends State<HomePage> {
           Provider.of<AppDataProvider>(context, listen: false);
 
       _lastBooksListVersion = appDataProvider.lastBooksListVersion;
+      _lastCategoriesListVersion = appDataProvider.lastCategoriesListVersion;
 
       CategoriesProvider categoriesProvider =
           Provider.of<CategoriesProvider>(context, listen: false);
 
-      categoriesProvider.initActions(userProvider: userProvider);
+      categoriesProvider.initActions(
+          appDataProvider: appDataProvider, userProvider: userProvider);
       BooksProvider booksProvider =
           Provider.of<BooksProvider>(context, listen: false);
 
@@ -122,6 +125,15 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(width: 10),
                 Text(
                     'Cached Books List version: ${AppCacheServices().readLastBooksVersion()}')
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                    'Cloud Categories version: ${_lastCategoriesListVersion.toString()}'),
+                const SizedBox(width: 10),
+                Text(
+                    'Cached Categories version: ${AppCacheServices().readLastCategoriesVersion()}')
               ],
             ),
             Container(
