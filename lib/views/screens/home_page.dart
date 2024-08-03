@@ -5,6 +5,8 @@ import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
+import 'package:book_frontend/services/cache_services/app_cache_services.dart';
+import 'package:book_frontend/services/cache_services/book_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/short_book_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical_book_tile.dart';
@@ -65,7 +67,8 @@ class _HomePageState extends State<HomePage> {
       BooksProvider booksProvider =
           Provider.of<BooksProvider>(context, listen: false);
 
-      booksProvider.initActions(userProvider: userProvider);
+      booksProvider.initActions(
+          appDataProvider: appDataProvider, userProvider: userProvider);
 
       // _scrollController.addListener(() {
       //   if (_scrollController.position.atEdge) {
@@ -111,8 +114,16 @@ class _HomePageState extends State<HomePage> {
             Text(
                 '${userProvider.user?.booksStarted?.map((e) => e["book_id"]).toList()}'),
             Text(
-                '${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
-            Text(_lastBooksListVersion.toString()),
+                ' ${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
+            Row(
+              children: [
+                Text(
+                    'Cloud Books List version: ${_lastBooksListVersion.toString()}'),
+                const SizedBox(width: 10),
+                Text(
+                    'Cached Books List version: ${AppCacheServices().readLastBooksVersion()}')
+              ],
+            ),
             Container(
               height: 40,
               margin: EdgeInsets.all(generalMargin),

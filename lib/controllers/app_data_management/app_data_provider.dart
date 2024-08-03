@@ -1,3 +1,4 @@
+import 'package:book_frontend/services/cache_services/app_cache_services.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppDataProvider extends ChangeNotifier {
@@ -13,5 +14,7 @@ class AppDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  checkIfShouldFetchBooks() {}
+  bool checkIfShouldFetchBooks() {
+    return AppCacheServices().readLastBooksVersion() != lastBooksListVersion;
+  }
 }

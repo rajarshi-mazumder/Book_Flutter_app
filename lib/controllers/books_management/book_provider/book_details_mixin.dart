@@ -2,7 +2,7 @@ import 'package:book_frontend/controllers/books_management/books_data_master.dar
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/book_details.dart';
-import 'package:book_frontend/services/cache_services/cache_services.dart';
+import 'package:book_frontend/services/cache_services/book_cache_services.dart';
 import 'package:flutter/material.dart';
 
 mixin BookDetailsMixin on ChangeNotifier {
@@ -48,7 +48,7 @@ mixin BookDetailsMixin on ChangeNotifier {
   Future<Map<String, dynamic>?> readBookDetailsFromStorage(
       {required Book book}) async {
     Map<String, dynamic>? bookDetails =
-        await CacheServices().readBookChapters(book: book);
+        await BookCacheServices().readBookChapters(book: book);
     return bookDetails;
   }
 
@@ -75,6 +75,6 @@ mixin BookDetailsMixin on ChangeNotifier {
   // writes the book into storage
   writeBookDetailsIntoStorage(
       {required BookDetails bookDetails, required Book book}) {
-    CacheServices().writeBookChapters(bookDetails: bookDetails, book: book);
+    BookCacheServices().writeBookChapters(bookDetails: bookDetails, book: book);
   }
 }

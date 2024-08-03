@@ -38,7 +38,8 @@ class UserCacheServices {
   writeUserInterestedCategories({required String categoryIdToSave}) {
     try {
       List<Map<String, dynamic>>? savedInterestedCategories = [];
-      final tempSavedInterestedCategories = _userDataBox?.get('interested_categories');
+      final tempSavedInterestedCategories =
+          _userDataBox?.get('interested_categories');
 
       if (tempSavedInterestedCategories != null) {
         for (var t in tempSavedInterestedCategories) {
@@ -61,7 +62,6 @@ class UserCacheServices {
     }
   }
 
-
   List<Map<String, dynamic>>? readUserBooksStarted() {
     try {
       List<Map<String, dynamic>>? savedBooksStarted = [];
@@ -83,18 +83,18 @@ class UserCacheServices {
   List<Map<String, dynamic>>? readUserInterestedCategories() {
     try {
       List<Map<String, dynamic>>? savedInterestedCategories = [];
-      final tempSavedInterstedCategories =
+      final tempSavedInterestedCategories =
           _userDataBox?.get('interested_categories');
 
-      if (tempSavedInterstedCategories != null) {
-        for (var t in tempSavedInterstedCategories) {
+      if (tempSavedInterestedCategories != null) {
+        for (var t in tempSavedInterestedCategories) {
           savedInterestedCategories.add(getInterestedCategoryAsMap(t));
         }
       }
 
       return savedInterestedCategories;
     } catch (e) {
-      print("Could not read saved books");
+      print("Could not read interested categories");
       return null;
     }
   }
