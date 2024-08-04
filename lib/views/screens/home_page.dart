@@ -1,6 +1,7 @@
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/controllers/books_management/categories_provider/categories_provider.dart';
+import 'package:book_frontend/controllers/books_management/collections_provider/collections_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   String? _lastBooksListVersion;
   String? _lastCategoriesListVersion;
+  String? _lastCollectionsListVersion;
 
   filterBooksByCategory(
       {required BooksProvider booksProvider,
@@ -59,20 +61,26 @@ class _HomePageState extends State<HomePage> {
       AppDataProvider appDataProvider =
           Provider.of<AppDataProvider>(context, listen: false);
 
-      _lastBooksListVersion = appDataProvider.lastBooksListVersion;
-      _lastCategoriesListVersion = appDataProvider.lastCategoriesListVersion;
-
       CategoriesProvider categoriesProvider =
           Provider.of<CategoriesProvider>(context, listen: false);
 
-      categoriesProvider.initActions(
-          appDataProvider: appDataProvider, userProvider: userProvider);
       BooksProvider booksProvider =
           Provider.of<BooksProvider>(context, listen: false);
+
+      CollectionsProvider collectionsProvider =
+          Provider.of<CollectionsProvider>(context, listen: false);
+
+      _lastBooksListVersion = appDataProvider.lastBooksListVersion;
+      _lastCategoriesListVersion = appDataProvider.lastCategoriesListVersion;
+      _lastCollectionsListVersion = appDataProvider.lastCollectionsListVersion;
+
+      categoriesProvider.initActions(
+          appDataProvider: appDataProvider, userProvider: userProvider);
 
       booksProvider.initActions(
           appDataProvider: appDataProvider, userProvider: userProvider);
 
+      collectionsProvider.initActions(appDataProvider: appDataProvider);
       // _scrollController.addListener(() {
       //   if (_scrollController.position.atEdge) {
       //     if (_scrollController.position.pixels != 0) {
@@ -101,6 +109,8 @@ class _HomePageState extends State<HomePage> {
         Provider.of<CategoriesProvider>(context);
 
     BooksProvider booksProvider = Provider.of<BooksProvider>(context);
+    CollectionsProvider collectionsProvider =
+        Provider.of<CollectionsProvider>(context);
 
     List<Category> categories = categoriesProvider.categoriesList;
 
@@ -136,6 +146,15 @@ class _HomePageState extends State<HomePage> {
                     'Cached Categories version: ${AppCacheServices().readLastCategoriesVersion()}')
               ],
             ),
+            Row(
+              children: [
+                Text(
+                    'Cloud Collections version: ${_lastCollectionsListVersion.toString()}'),
+                const SizedBox(width: 10),
+                Text(
+                    'Cached Collections version: ${AppCacheServices().readLastCollectionsVersion()}')
+              ],
+            ),
             Container(
               height: 40,
               margin: EdgeInsets.all(generalMargin),
@@ -168,6 +187,15 @@ class _HomePageState extends State<HomePage> {
             ),
             RecommendedBooksHeader(),
             HorizontalBooksList(booksList: booksProvider.recommendedBooks),
+            SizedBox(
+              height: 100,
+              child: ListView(
+                children: collectionsProvider.collections
+                    .map((e) =>
+                        Text(e.name, style: TextStyle(color: Colors.white)))
+                    .toList(),
+              ),
+            ),
             VerticalBooksList(
                 booksList: filteredBooksList.isNotEmpty
                     ? filteredBooksList

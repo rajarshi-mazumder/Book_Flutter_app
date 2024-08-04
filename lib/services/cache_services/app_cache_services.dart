@@ -29,9 +29,21 @@ class AppCacheServices {
     return _appDataBox?.get("last_categories_list_version");
   }
 
+  // collectionsList
+  writeLastCollectionsListVersion({String? collectionsListVersion}) {
+    if (collectionsListVersion != null) {
+      _appDataBox?.put('last_collections_list_version', collectionsListVersion);
+    }
+  }
+
+  String? readLastCollectionsVersion() {
+    return _appDataBox?.get("last_collections_list_version");
+  }
+
   // delete all data
   deleteAppData() {
     _appDataBox?.delete('last_books_list_version');
     _appDataBox?.delete('last_categories_list_version');
+    _appDataBox?.delete('last_collections_list_version');
   }
 }

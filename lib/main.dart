@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/controllers/books_management/categories_provider/categories_provider.dart';
+import 'package:book_frontend/controllers/books_management/collections_provider/collections_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
+import 'package:book_frontend/models/books/collection.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/authentication/silent_signin_page.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ void main() async {
   Hive.registerAdapter(BookAdapter());
   Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(AuthorAdapter());
+  Hive.registerAdapter(CollectionAdapter());
 
   await Hive.openBox("app_data");
   await Hive.openBox("books_data");
@@ -27,6 +30,7 @@ void main() async {
 
   Hive.openBox<Book>('all_books');
   Hive.openBox<Category>('all_categories');
+  Hive.openBox<Collection>('all_collections');
 
   runApp(const MyApp());
 }
@@ -43,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => CategoriesProvider()),
         ChangeNotifierProvider(create: (context) => BooksProvider()),
+        ChangeNotifierProvider(create: (context) => CollectionsProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

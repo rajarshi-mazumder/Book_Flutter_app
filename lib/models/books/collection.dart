@@ -1,10 +1,25 @@
 import 'package:book_frontend/models/books/category.dart';
 
+import 'package:hive/hive.dart';
+import 'category.dart';
+
+part 'collection.g.dart';
+
+@HiveType(typeId: 3) // Assign a unique type ID
 class Collection {
+  @HiveField(0)
   String id;
+
+  @HiveField(1)
   String name;
+
+  @HiveField(2)
   String description;
+
+  @HiveField(3)
   String collectionImgPath;
+
+  @HiveField(4)
   List<Category>? categories = [];
 
   Collection({

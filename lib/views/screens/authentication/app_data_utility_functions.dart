@@ -8,8 +8,13 @@ void setAppData(Map<String, dynamic>? appData, BuildContext context) {
       Provider.of<AppDataProvider>(context, listen: false);
 
   appDataProvider.updateLastBooksListVersion(
-      newBooksListVersion: appData["last_books_list_version"]);
+      newBooksListVersion: appData["last_books_list_version"] ?? "1.0");
 
   appDataProvider.updateLastCategoriesListVersion(
-      newCategoriesListVersion: appData["last_categories_list_version"]);
+      newCategoriesListVersion:
+          appData["last_categories_list_version"] ?? "1.0");
+
+  appDataProvider.updateLastCollectionsListVersion(
+      newCollectionsListVersion:
+          appData["last_collections_list_version"] ?? "1.0");
 }
