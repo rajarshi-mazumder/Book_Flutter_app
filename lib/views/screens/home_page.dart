@@ -80,7 +80,8 @@ class _HomePageState extends State<HomePage> {
       booksProvider.initActions(
           appDataProvider: appDataProvider, userProvider: userProvider);
 
-      collectionsProvider.initActions(appDataProvider: appDataProvider);
+      collectionsProvider.initActions(
+          appDataProvider: appDataProvider, booksProvider: booksProvider);
       // _scrollController.addListener(() {
       //   if (_scrollController.position.atEdge) {
       //     if (_scrollController.position.pixels != 0) {
@@ -191,8 +192,8 @@ class _HomePageState extends State<HomePage> {
               height: 100,
               child: ListView(
                 children: collectionsProvider.collections
-                    .map((e) =>
-                        Text(e.name, style: TextStyle(color: Colors.white)))
+                    .map((e) => Text((e.books?.length).toString(),
+                        style: TextStyle(color: Colors.white)))
                     .toList(),
               ),
             ),

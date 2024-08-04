@@ -1,3 +1,4 @@
+import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
 
 import 'package:hive/hive.dart';
@@ -22,12 +23,15 @@ class Collection {
   @HiveField(4)
   List<Category>? categories = [];
 
+  List<Book>? books = [];
+
   Collection({
     required this.id,
     required this.name,
     required this.description,
     required this.collectionImgPath,
     this.categories,
+    this.books,
   });
 
   // Factory constructor to create a Collection from a map
