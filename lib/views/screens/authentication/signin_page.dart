@@ -4,6 +4,7 @@ import 'package:book_frontend/services/auth_services/auth_services.dart';
 import 'package:book_frontend/views/screens/authentication/app_data_utility_functions.dart';
 import 'package:book_frontend/views/screens/authentication/signup_page.dart';
 import 'package:book_frontend/views/screens/home_page.dart';
+import 'package:book_frontend/views/screens/main_page_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,12 +36,12 @@ class _SignInPageState extends State<SignInPage> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const MainPageLayout()),
         );
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const MainPageLayout()),
         );
       }
     }

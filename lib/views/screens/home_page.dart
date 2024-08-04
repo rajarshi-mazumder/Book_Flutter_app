@@ -10,6 +10,7 @@ import 'package:book_frontend/models/books/collection.dart';
 import 'package:book_frontend/services/cache_services/app_cache_services.dart';
 import 'package:book_frontend/services/cache_services/book_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
+import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/collection_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/horizontal_collections_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/short_book_tile.dart';
@@ -17,7 +18,9 @@ import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/horizontal_books_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical_books_list.dart';
+import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/bottom_nav_bar.dart';
 import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/nav_bar.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +37,8 @@ class _HomePageState extends State<HomePage> {
   String? _lastBooksListVersion;
   String? _lastCategoriesListVersion;
   String? _lastCollectionsListVersion;
+
+  int _bottomNavIndex = 0;
 
   filterBooksByCategory(
       {required BooksProvider booksProvider,
@@ -118,93 +123,90 @@ class _HomePageState extends State<HomePage> {
 
     List<Category> categories = categoriesProvider.categoriesList;
 
-    return Scaffold(
-      appBar: Navbar(),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-                "Welcome ${userProvider.user?.name}, ${userProvider.user?.email} "),
-            Text(
-                '${userProvider.user?.booksStarted?.map((e) => e["book_id"]).toList()}'),
-            Text(
-                ' ${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
-            Row(
+    return SingleChildScrollView(
+      controller: _scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+              "Welcome ${userProvider.user?.name}, ${userProvider.user?.email} "),
+          Text(
+              '${userProvider.user?.booksStarted?.map((e) => e["book_id"]).toList()}'),
+          Text(
+              ' ${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
+          Row(
+            children: [
+              Text(
+                  'Cloud Books List version: ${_lastBooksListVersion.toString()}'),
+              const SizedBox(width: 10),
+              Text(
+                  'Cached Books List version: ${AppCacheServices().readLastBooksVersion()}')
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                  'Cloud Categories version: ${_lastCategoriesListVersion.toString()}'),
+              const SizedBox(width: 10),
+              Text(
+                  'Cached Categories version: ${AppCacheServices().readLastCategoriesVersion()}')
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                  'Cloud Collections version: ${_lastCollectionsListVersion.toString()}'),
+              const SizedBox(width: 10),
+              Text(
+                  'Cached Collections version: ${AppCacheServices().readLastCollectionsVersion()}')
+            ],
+          ),
+          Container(
+            height: 40,
+            margin: EdgeInsets.all(generalMargin),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
               children: [
-                Text(
-                    'Cloud Books List version: ${_lastBooksListVersion.toString()}'),
-                const SizedBox(width: 10),
-                Text(
-                    'Cached Books List version: ${AppCacheServices().readLastBooksVersion()}')
+                Container(
+                    margin: EdgeInsets.only(right: generalMargin),
+                    child: GestureDetector(
+                      child:
+                          CategoryTile(category: Category(name: "All", id: -1)),
+                      onTap: () {
+                        resetFilteredBooks();
+                      },
+                    )),
+                ...categories
+                    .map((e) => Container(
+                        margin: EdgeInsets.only(right: generalMargin),
+                        child: GestureDetector(
+                          child: CategoryTile(category: e),
+                          onTap: () {
+                            filterBooksByCategory(
+                                booksProvider: booksProvider,
+                                categoryToFilterBy: e);
+                          },
+                        )))
+                    .toList()
               ],
             ),
-            Row(
-              children: [
-                Text(
-                    'Cloud Categories version: ${_lastCategoriesListVersion.toString()}'),
-                const SizedBox(width: 10),
-                Text(
-                    'Cached Categories version: ${AppCacheServices().readLastCategoriesVersion()}')
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                    'Cloud Collections version: ${_lastCollectionsListVersion.toString()}'),
-                const SizedBox(width: 10),
-                Text(
-                    'Cached Collections version: ${AppCacheServices().readLastCollectionsVersion()}')
-              ],
-            ),
-            Container(
-              height: 40,
-              margin: EdgeInsets.all(generalMargin),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  Container(
-                      margin: EdgeInsets.only(right: generalMargin),
-                      child: GestureDetector(
-                        child: CategoryTile(
-                            category: Category(name: "All", id: -1)),
-                        onTap: () {
-                          resetFilteredBooks();
-                        },
-                      )),
-                  ...categories
-                      .map((e) => Container(
-                          margin: EdgeInsets.only(right: generalMargin),
-                          child: GestureDetector(
-                            child: CategoryTile(category: e),
-                            onTap: () {
-                              filterBooksByCategory(
-                                  booksProvider: booksProvider,
-                                  categoryToFilterBy: e);
-                            },
-                          )))
-                      .toList()
-                ],
-              ),
-            ),
-            HorizontalBooksList(
-              booksList: booksProvider.recommendedBooks,
-              label: "Recommended Books",
-            ),
-            for (Collection c in collectionsProvider.collections)
-              HorizontalBooksList(booksList: c.books ?? [], label: c.name),
-            HorizontalCollectionsList(
-              collections: collectionsProvider.collections,
-              label: "Collections",
-            ),
-            VerticalBooksList(
-                booksList: filteredBooksList.isNotEmpty
-                    ? filteredBooksList
-                    : booksProvider.booksList),
-          ],
-        ),
+          ),
+          HorizontalBooksList(
+            booksList: booksProvider.recommendedBooks,
+            label: "Recommended Books",
+          ),
+          for (Collection c in collectionsProvider.collections)
+            HorizontalBooksList(booksList: c.books ?? [], label: c.name),
+          HorizontalCollectionsList(
+            collections: collectionsProvider.collections,
+            label: "Collections",
+          ),
+          VerticalBooksList(
+              booksList: filteredBooksList.isNotEmpty
+                  ? filteredBooksList
+                  : booksProvider.booksList),
+        ],
       ),
     );
   }
