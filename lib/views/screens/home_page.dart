@@ -9,6 +9,8 @@ import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/services/cache_services/app_cache_services.dart';
 import 'package:book_frontend/services/cache_services/book_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/collection_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/horizontal_collections_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/short_book_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical_book_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
@@ -186,17 +188,11 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            RecommendedBooksHeader(),
+            const RecommendedBooksHeader(),
             HorizontalBooksList(booksList: booksProvider.recommendedBooks),
-            SizedBox(
-              height: 100,
-              child: ListView(
-                children: collectionsProvider.collections
-                    .map((e) => Text((e.books?.length).toString(),
-                        style: TextStyle(color: Colors.white)))
-                    .toList(),
-              ),
-            ),
+            const CollectionsListHeader(),
+            HorizontalCollectionsList(
+                collections: collectionsProvider.collections),
             VerticalBooksList(
                 booksList: filteredBooksList.isNotEmpty
                     ? filteredBooksList
