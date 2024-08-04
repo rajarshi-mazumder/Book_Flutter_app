@@ -6,6 +6,7 @@ import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/book_details.dart';
 import 'package:book_frontend/models/books/category.dart';
+import 'package:book_frontend/models/books/collection.dart';
 import 'package:book_frontend/services/cache_services/book_cache_services.dart';
 import 'package:flutter/material.dart';
 
