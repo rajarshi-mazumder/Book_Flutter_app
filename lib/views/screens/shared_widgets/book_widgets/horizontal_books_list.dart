@@ -5,25 +5,35 @@ import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical
 import 'package:flutter/material.dart';
 
 class HorizontalBooksList extends StatelessWidget {
-  const HorizontalBooksList({super.key, required this.booksList});
+  const HorizontalBooksList(
+      {super.key, required this.booksList, required this.label});
 
   final List<Book> booksList;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SHORT_BOOK_TILE_HEIGHT,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        children: booksList.map((e) => ShortBookTile(book: e)).toList(),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        HorizontalBooksListHeader(label: label),
+        SizedBox(
+          height: SHORT_BOOK_TILE_HEIGHT,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            children: booksList.map((e) => ShortBookTile(book: e)).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
 
-class RecommendedBooksHeader extends StatelessWidget {
-  const RecommendedBooksHeader({super.key});
+class HorizontalBooksListHeader extends StatelessWidget {
+  const HorizontalBooksListHeader({super.key, required this.label});
+
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +42,7 @@ class RecommendedBooksHeader extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 20, bottom: 5),
       child: Text(
-        "Recommended Books",
+        label,
         style: headerLargeStyle(appTextTheme),
       ),
     );

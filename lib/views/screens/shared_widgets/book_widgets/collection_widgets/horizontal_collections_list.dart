@@ -5,28 +5,38 @@ import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collecti
 import 'package:flutter/material.dart';
 
 class HorizontalCollectionsList extends StatelessWidget {
-  const HorizontalCollectionsList({super.key, required this.collections});
+  const HorizontalCollectionsList(
+      {super.key, required this.collections, required this.label});
 
   final List<Collection> collections;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: collectionTileHeight,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: collections
-            .map((e) => Container(
-                margin: EdgeInsets.all(generalMargin),
-                child: CollectionTile(collection: e)))
-            .toList(),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CollectionsListHeader(label: label),
+        SizedBox(
+          height: collectionTileHeight,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: collections
+                .map((e) => Container(
+                    margin: EdgeInsets.all(generalMargin),
+                    child: CollectionTile(collection: e)))
+                .toList(),
+          ),
+        )
+      ],
     );
   }
 }
 
 class CollectionsListHeader extends StatelessWidget {
-  const CollectionsListHeader({super.key});
+  const CollectionsListHeader({super.key, required this.label});
+
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +45,7 @@ class CollectionsListHeader extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 20, bottom: 5),
       child: Text(
-        "Collections",
+        label,
         style: headerLargeStyle(appTextTheme),
       ),
     );

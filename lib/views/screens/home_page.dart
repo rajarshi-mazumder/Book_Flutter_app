@@ -6,6 +6,7 @@ import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/data/books_data.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
+import 'package:book_frontend/models/books/collection.dart';
 import 'package:book_frontend/services/cache_services/app_cache_services.dart';
 import 'package:book_frontend/services/cache_services/book_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
@@ -188,11 +189,16 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            const RecommendedBooksHeader(),
-            HorizontalBooksList(booksList: booksProvider.recommendedBooks),
-            const CollectionsListHeader(),
+            HorizontalBooksList(
+              booksList: booksProvider.recommendedBooks,
+              label: "Recommended Books",
+            ),
+            for (Collection c in collectionsProvider.collections)
+              HorizontalBooksList(booksList: c.books ?? [], label: c.name),
             HorizontalCollectionsList(
-                collections: collectionsProvider.collections),
+              collections: collectionsProvider.collections,
+              label: "Collections",
+            ),
             VerticalBooksList(
                 booksList: filteredBooksList.isNotEmpty
                     ? filteredBooksList
