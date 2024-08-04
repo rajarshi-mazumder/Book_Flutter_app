@@ -1,7 +1,7 @@
 import 'package:book_frontend/services/cache_services/user_cache_services.dart';
 
-import 'book.dart';
-import 'category.dart';
+import '../books/book.dart';
+import '../books/category.dart';
 
 // default data
 List<Map<String, dynamic>> defaultInterestedCategories = [
