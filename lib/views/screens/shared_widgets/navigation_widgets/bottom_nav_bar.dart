@@ -4,6 +4,7 @@ import 'package:book_frontend/views/screens/library_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
+import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
 
 class BottomNavBar extends StatefulWidget {
   BottomNavBar(
@@ -23,7 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     });
     widget.pageController.animateToPage(
       index,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
@@ -32,14 +33,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return CurvedNavigationBar(
       index: widget.bottomNavIndex,
-      height: 50,
-      backgroundColor: primaryColor,
-      color: backgroundColor,
-      items: [
+      // height: 50,
+      backgroundColor: Colors.transparent,
+      buttonBackgroundColor: primaryColor,
+      color: bottomNavBarColor,
+      animationDuration: const Duration(milliseconds: 300),
+      items: const [
         Icon(Icons.explore), // (3)
         Icon(Icons.search), // (3)
         Icon(Icons.bookmark), // (3)
-        Icon(Icons.person), // (3)
       ],
 
       onTap: onNavItemTapped, // (4)

@@ -5,6 +5,7 @@ Color primaryColor = const Color.fromARGB(255, 17, 100, 102);
 Color secondaryColor = const Color.fromARGB(255, 217, 176, 140);
 Color tertiaryColor = const Color.fromARGB(255, 255, 203, 154);
 Color backgroundColor = const Color.fromARGB(255, 18, 19, 18);
+Color bottomNavBarColor = const Color.fromARGB(255, 32, 35, 32);
 Color cardColor = const Color.fromARGB(255, 209, 232, 226);
 
 Color appBarColor = const Color.fromARGB(255, 25, 26, 25);

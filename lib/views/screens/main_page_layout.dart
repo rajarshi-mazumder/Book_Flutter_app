@@ -27,23 +27,50 @@ class _MainPageLayoutState extends State<MainPageLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Navbar(),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _bottomNavIndex = index;
-          });
-        },
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          HomePage(), // Your page widget
-          LibraryPage(), // Your page widget
-          Container(), // Your page widget
-          Container(), // Your page widget
+          PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _bottomNavIndex = index;
+              });
+            },
+            children: [
+              HomePage(), // Your page widget
+              LibraryPage(), // Your page widget
+              Container(), // Your page widget
+            ],
+          ),
+          Positioned(
+              bottom: -25,
+              child: Container(
+                height: 80,
+                width: MediaQuery.of(context).size.width,
+                // color: primaryColor,
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                            Colors.black,
+                            Colors.black,
+                            Colors.black.withOpacity(0.5),
+                            Colors.black.withOpacity(0),
+                          ])),
+                    ),
+                    BottomNavBar(
+                      pageController: _pageController,
+                      bottomNavIndex: _bottomNavIndex,
+                    )
+                  ],
+                ),
+              ))
         ],
-      ),
-      bottomNavigationBar: BottomNavBar(
-        pageController: _pageController,
-        bottomNavIndex: _bottomNavIndex,
       ),
     );
   }
