@@ -200,8 +200,6 @@ class _HomePageState extends State<HomePage> {
             booksList: booksProvider.recommendedBooks,
             label: "Recommended Books",
           ),
-          for (Collection c in collectionsProvider.collections)
-            HorizontalBooksList(booksList: c.books ?? [], label: c.name),
           HorizontalCollectionsList(
             collections: collectionsProvider.recommendedCollections,
             label: "Recommended Collections",

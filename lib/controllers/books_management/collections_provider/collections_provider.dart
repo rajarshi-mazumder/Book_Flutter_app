@@ -25,6 +25,7 @@ class CollectionsProvider extends ChangeNotifier with CollectionManagerMixin {
     await getCollections(appDataProvider: appDataProvider);
     generateBooksListForEachCollection(booksProvider: booksProvider);
     generateRecommendedCollectionsList(userProvider: userProvider);
+    sortCollectionsList(userProvider: userProvider);
     notifyListeners();
   }
 
@@ -61,19 +62,13 @@ class CollectionsProvider extends ChangeNotifier with CollectionManagerMixin {
         userProvider.user?.interestedCategories, _collections);
     notifyListeners();
   }
-}
 
-Future<List<Collection>> downloadCollectionList() async {
-  Map<String, dynamic>? collectionsListData =
-      await CollectionsDataMaster.getCollections();
-
-  List<Collection> collectionList = [];
-  List? tempCollectionsList = collectionsListData?["collection_data"];
-
-  if (tempCollectionsList != null) {
-    for (var element in tempCollectionsList) {
-      collectionList.add(Collection.fromMap(element));
+  sortCollectionsList({required UserProvider userProvider}) {
+    if (userProvider.user?.interestedCategories == null) {
+      return;
     }
+    _collections = sortCollectionsByUserInterest(
+        collections, userProvider.user!.interestedCategories!);
+    notifyListeners();
   }
-  return collectionList;
 }
