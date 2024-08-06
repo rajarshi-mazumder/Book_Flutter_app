@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/book_provider/book_details_mixin.dart';
 import 'package:book_frontend/controllers/books_management/book_utilities/sort_utilities.dart';
@@ -24,6 +26,12 @@ class BooksProvider extends ChangeNotifier
 
   List<Book> get recommendedBooks => _recommendedBooks;
 
+  static final StreamController _booksFetchedStreamController =
+      StreamController.broadcast();
+
+  static Stream get booksFetchedStreamController =>
+      _booksFetchedStreamController.stream;
+
   initActions(
       {required AppDataProvider appDataProvider,
       required UserProvider userProvider}) async {
@@ -35,6 +43,7 @@ class BooksProvider extends ChangeNotifier
       await getRecommendedBooks(
           interestedCategories: userProvider.user!.interestedCategories!);
     }
+    _booksFetchedStreamController.add(null);
     notifyListeners();
   }
 

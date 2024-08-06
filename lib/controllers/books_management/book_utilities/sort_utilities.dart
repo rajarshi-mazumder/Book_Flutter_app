@@ -71,7 +71,6 @@ List<Book> sortBooksByRecommendation({
       for (Category bookCategory in book.categories!) {
         if (interestedCategories
             .any((cat) => cat["category_id"] == bookCategory.id.toString())) {
-          print("ADD THIS BOOK ${book.title}");
           recommendedBooks.add(book);
           break; // Stop checking other categories for this book
         }

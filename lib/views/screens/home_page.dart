@@ -88,8 +88,10 @@ class _HomePageState extends State<HomePage> {
       booksProvider.initActions(
           appDataProvider: appDataProvider, userProvider: userProvider);
 
-      collectionsProvider.initActions(
-          appDataProvider: appDataProvider, booksProvider: booksProvider);
+      BooksProvider.booksFetchedStreamController.listen((_) {
+        collectionsProvider.initActions(
+            appDataProvider: appDataProvider, booksProvider: booksProvider);
+      });
       // _scrollController.addListener(() {
       //   if (_scrollController.position.atEdge) {
       //     if (_scrollController.position.pixels != 0) {
