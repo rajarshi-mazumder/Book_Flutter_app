@@ -42,10 +42,10 @@ List<Category> sortCategoriesByRelevance(
   if (categoriesInterested != null) {
     categoriesList.sort((a, b) {
       Map<String, dynamic>? aCat = categoriesInterested.firstWhere(
-          (category) => category['category_id'] == a.id,
+          (category) => int.parse(category['category_id']) == a.id,
           orElse: () => {});
       Map<String, dynamic>? bCat = categoriesInterested.firstWhere(
-          (category) => category['category_id'] == b.id,
+          (category) => int.parse(category['category_id']) == b.id,
           orElse: () => {});
 
       if (aCat.isNotEmpty && bCat.isNotEmpty) {
@@ -70,7 +70,7 @@ List<Book> sortBooksByRecommendation({
     if (book.categories != null) {
       for (Category bookCategory in book.categories!) {
         if (interestedCategories
-            .any((cat) => cat["category_id"] == bookCategory.id.toString())) {
+            .any((cat) => int.parse(cat["category_id"]) == bookCategory.id)) {
           recommendedBooks.add(book);
           break; // Stop checking other categories for this book
         }

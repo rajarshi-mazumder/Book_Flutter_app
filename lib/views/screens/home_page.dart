@@ -63,49 +63,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      UserProvider userProvider =
-          Provider.of<UserProvider>(context, listen: false);
-
       AppDataProvider appDataProvider =
           Provider.of<AppDataProvider>(context, listen: false);
-
-      CategoriesProvider categoriesProvider =
-          Provider.of<CategoriesProvider>(context, listen: false);
-
-      BooksProvider booksProvider =
-          Provider.of<BooksProvider>(context, listen: false);
-
-      CollectionsProvider collectionsProvider =
-          Provider.of<CollectionsProvider>(context, listen: false);
 
       _lastBooksListVersion = appDataProvider.lastBooksListVersion;
       _lastCategoriesListVersion = appDataProvider.lastCategoriesListVersion;
       _lastCollectionsListVersion = appDataProvider.lastCollectionsListVersion;
-
-      categoriesProvider.initActions(
-          appDataProvider: appDataProvider, userProvider: userProvider);
-
-      booksProvider.initActions(
-          appDataProvider: appDataProvider, userProvider: userProvider);
-
-      BooksProvider.booksFetchedStreamController.listen((_) {
-        collectionsProvider.initActions(
-            appDataProvider: appDataProvider,
-            booksProvider: booksProvider,
-            userProvider: userProvider);
-      });
-      // _scrollController.addListener(() {
-      //   if (_scrollController.position.atEdge) {
-      //     if (_scrollController.position.pixels != 0) {
-      //       // User has scrolled to the bottom
-      //       UserProvider userProvider =
-      //           Provider.of<UserProvider>(context, listen: false);
-      //       BooksProvider booksProvider =
-      //           Provider.of<BooksProvider>(context, listen: false);
-      //       booksProvider.initActions(userProvider: userProvider);
-      //     }
-      //   }
-      // });
     });
   }
 
