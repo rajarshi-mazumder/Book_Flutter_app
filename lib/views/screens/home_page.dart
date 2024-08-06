@@ -90,7 +90,9 @@ class _HomePageState extends State<HomePage> {
 
       BooksProvider.booksFetchedStreamController.listen((_) {
         collectionsProvider.initActions(
-            appDataProvider: appDataProvider, booksProvider: booksProvider);
+            appDataProvider: appDataProvider,
+            booksProvider: booksProvider,
+            userProvider: userProvider);
       });
       // _scrollController.addListener(() {
       //   if (_scrollController.position.atEdge) {
@@ -201,8 +203,12 @@ class _HomePageState extends State<HomePage> {
           for (Collection c in collectionsProvider.collections)
             HorizontalBooksList(booksList: c.books ?? [], label: c.name),
           HorizontalCollectionsList(
+            collections: collectionsProvider.recommendedCollections,
+            label: "Recommended Collections",
+          ),
+          HorizontalCollectionsList(
             collections: collectionsProvider.collections,
-            label: "Collections",
+            label: "All Collections",
           ),
           VerticalBooksList(
               booksList: filteredBooksList.isNotEmpty

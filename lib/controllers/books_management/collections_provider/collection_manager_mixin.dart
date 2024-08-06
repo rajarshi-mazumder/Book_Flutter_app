@@ -2,7 +2,7 @@ import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/collection.dart';
 import 'package:flutter/material.dart';
 
-mixin CollectionManagerMixin on ChangeNotifier {
+mixin CollectionManagerMixin {
   List<Book> getBookForCollection(Collection collection, List<Book> allBooks) {
     // Check if collection categories are null and return an empty list if so
     if (collection.categories == null) {
@@ -21,5 +21,27 @@ mixin CollectionManagerMixin on ChangeNotifier {
     }).toList();
 
     return filteredBooks;
+  }
+
+  List<Collection> generateRecommendedCollections(
+      List<Map<String, dynamic>>? interestedCategories,
+      List<Collection> allCollections) {
+    if (interestedCategories == null || interestedCategories.isEmpty) {
+      return [];
+    }
+
+    // Create a set of interested category IDs for quick lookup
+    final interestedCategoryIds = interestedCategories
+        .map((cat) => int.parse(cat['category_id']))
+        .toSet();
+
+    // Filter collections that have any matching category with the interested categories
+    final recommendedCollections = allCollections.where((collection) {
+      return collection.categories?.any(
+              (category) => interestedCategoryIds.contains(category.id)) ??
+          false;
+    }).toList();
+
+    return recommendedCollections;
   }
 }

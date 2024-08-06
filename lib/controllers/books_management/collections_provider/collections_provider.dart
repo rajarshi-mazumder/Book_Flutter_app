@@ -2,6 +2,7 @@ import 'package:book_frontend/controllers/app_data_management/app_data_provider.
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/controllers/books_management/collections_data_master.dart';
 import 'package:book_frontend/controllers/books_management/collections_provider/collection_manager_mixin.dart';
+import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/collection.dart';
 import 'package:book_frontend/services/cache_services/app_cache_services.dart';
@@ -10,14 +11,20 @@ import 'package:flutter/material.dart';
 
 class CollectionsProvider extends ChangeNotifier with CollectionManagerMixin {
   List<Collection> _collections = [];
+  List<Collection> _recommendedCollections = [];
 
   List<Collection> get collections => _collections;
 
-  initActions(
-      {required AppDataProvider appDataProvider,
-      required BooksProvider booksProvider}) async {
+  List<Collection> get recommendedCollections => _recommendedCollections;
+
+  initActions({
+    required AppDataProvider appDataProvider,
+    required BooksProvider booksProvider,
+    required UserProvider userProvider,
+  }) async {
     await getCollections(appDataProvider: appDataProvider);
     generateBooksListForEachCollection(booksProvider: booksProvider);
+    generateRecommendedCollectionsList(userProvider: userProvider);
     notifyListeners();
   }
 
@@ -47,6 +54,12 @@ class CollectionsProvider extends ChangeNotifier with CollectionManagerMixin {
           getBookForCollection(collections[i], booksProvider.booksList);
       collections[i].books = bookListForCollection;
     }
+  }
+
+  generateRecommendedCollectionsList({required UserProvider userProvider}) {
+    _recommendedCollections = generateRecommendedCollections(
+        userProvider.user?.interestedCategories, _collections);
+    notifyListeners();
   }
 }
 
