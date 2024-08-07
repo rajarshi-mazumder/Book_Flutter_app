@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Navbar extends StatelessWidget implements PreferredSizeWidget {
-  Navbar(
+  const Navbar(
       {super.key,
       this.title = "Book Summarizer",
       this.additionalActionWidgets});
 
   final String title;
-  List<Widget>? additionalActionWidgets;
+  final List<Widget>? additionalActionWidgets;
 
   @override
   Widget build(BuildContext context) {

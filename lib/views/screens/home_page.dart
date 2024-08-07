@@ -38,27 +38,6 @@ class _HomePageState extends State<HomePage> {
   String? _lastCategoriesListVersion;
   String? _lastCollectionsListVersion;
 
-  int _bottomNavIndex = 0;
-
-  filterBooksByCategory(
-      {required BooksProvider booksProvider,
-      required Category categoryToFilterBy}) {
-    setState(() {
-      filteredBooksList = booksProvider.booksList.where((book) {
-        for (Category cat in book.categories!) {
-          if (cat.name == categoryToFilterBy.name) return true;
-        }
-        return false;
-      }).toList();
-    });
-  }
-
-  resetFilteredBooks() {
-    setState(() {
-      filteredBooksList = [];
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -129,36 +108,6 @@ class _HomePageState extends State<HomePage> {
                   'Cached Collections version: ${AppCacheServices().readLastCollectionsVersion()}')
             ],
           ),
-          Container(
-            height: 40,
-            margin: EdgeInsets.all(generalMargin),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                Container(
-                    margin: EdgeInsets.only(right: generalMargin),
-                    child: GestureDetector(
-                      child:
-                          CategoryTile(category: Category(name: "All", id: -1)),
-                      onTap: () {
-                        resetFilteredBooks();
-                      },
-                    )),
-                ...categories
-                    .map((e) => Container(
-                        margin: EdgeInsets.only(right: generalMargin),
-                        child: GestureDetector(
-                          child: CategoryTile(category: e),
-                          onTap: () {
-                            filterBooksByCategory(
-                                booksProvider: booksProvider,
-                                categoryToFilterBy: e);
-                          },
-                        )))
-                    .toList()
-              ],
-            ),
-          ),
           HorizontalBooksList(
             booksList: booksProvider.recommendedBooks,
             label: "Recommended Books",
@@ -171,10 +120,7 @@ class _HomePageState extends State<HomePage> {
             collections: collectionsProvider.collections,
             label: "All Collections",
           ),
-          VerticalBooksList(
-              booksList: filteredBooksList.isNotEmpty
-                  ? filteredBooksList
-                  : booksProvider.booksList),
+          const SizedBox(height: 80)
         ],
       ),
     );

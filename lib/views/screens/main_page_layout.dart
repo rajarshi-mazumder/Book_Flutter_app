@@ -83,7 +83,7 @@ class _MainPageLayoutState extends State<MainPageLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Navbar(),
+      appBar: const Navbar(),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -96,8 +96,8 @@ class _MainPageLayoutState extends State<MainPageLayout> {
             },
             children: [
               HomePage(), // Your page widget
-              LibraryPage(), // Your page widget
               Container(), // Your page widget
+              LibraryPage(), // Your page widget
             ],
           ),
           Positioned(

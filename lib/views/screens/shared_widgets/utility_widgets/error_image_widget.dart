@@ -5,8 +5,8 @@ class ErrorImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      "https://i0.wp.com/picjumbo.com/wp-content/uploads/violet-colorful-sunset-sky-on-the-beach-free-photo.jpeg?w=600&quality=80",
+    return Image.asset(
+      "assets/images/default_collections.jpg",
       fit: BoxFit.cover,
     );
   }

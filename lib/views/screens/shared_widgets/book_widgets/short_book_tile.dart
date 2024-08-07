@@ -8,6 +8,7 @@ import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/views/screens/book_pages/book_details_page.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/short_category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/utility_widgets/error_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -76,10 +77,8 @@ class ShortBookTile extends StatelessWidget {
               height: SHORT_BOOK_TILE_HEIGHT,
               child: Image.network(
                 book.coverImgPath ?? "",
-                errorBuilder: (context, object, stackTrace) => Image.network(
-                  "https://i0.wp.com/picjumbo.com/wp-content/uploads/violet-colorful-sunset-sky-on-the-beach-free-photo.jpeg?w=600&quality=80",
-                  fit: BoxFit.cover,
-                ),
+                errorBuilder: (context, object, stackTrace) =>
+                    const ErrorImageWidget(),
                 fit: BoxFit.cover,
               ),
             ),
