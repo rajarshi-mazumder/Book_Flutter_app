@@ -5,6 +5,7 @@ import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/services/cache_services/user_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
+import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/book_pages/book_details_page.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/short_category_tile.dart';
@@ -51,7 +52,7 @@ class ShortBookTile extends StatelessWidget {
                 .writeUserBooksStarted(bookIdToSave: book.bookId);
             userProvider.addUserBooksStarted(
                 book: book, booksProvider: booksProvider);
-            userProvider.addUserInterestedCategories(
+            userProvider.updateUserInterestedCategories(
                 book: book,
                 booksProvider: booksProvider,
                 categoriesProvider: categoriesProvider);
@@ -72,9 +73,10 @@ class ShortBookTile extends StatelessWidget {
           ClipRRect(
             borderRadius:
                 BorderRadius.all(Radius.circular(generalBorderRadius)),
-            child: SizedBox(
+            child: Container(
               width: SHORT_BOOK_TILE_WIDTH,
               height: SHORT_BOOK_TILE_HEIGHT,
+              color: primaryColor,
               child: Image.network(
                 book.coverImgPath ?? "",
                 errorBuilder: (context, object, stackTrace) =>

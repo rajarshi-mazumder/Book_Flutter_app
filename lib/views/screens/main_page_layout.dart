@@ -8,6 +8,7 @@ import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/home_page.dart';
 import 'package:book_frontend/views/screens/library_page.dart';
+import 'package:book_frontend/views/screens/search_page.dart';
 import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/bottom_nav_bar.dart';
 import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/nav_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -59,6 +60,11 @@ class _MainPageLayoutState extends State<MainPageLayout> {
             booksProvider: booksProvider,
             userProvider: userProvider);
       });
+
+      CategoriesProvider.categoriesFetchedStreamController.listen((_) {
+        userProvider.generateInterestedCategories(
+            categoriesProvider: categoriesProvider);
+      });
       // _scrollController.addListener(() {
       //   if (_scrollController.position.atEdge) {
       //     if (_scrollController.position.pixels != 0) {
@@ -96,7 +102,7 @@ class _MainPageLayoutState extends State<MainPageLayout> {
             },
             children: [
               HomePage(), // Your page widget
-              Container(), // Your page widget
+              SearchPage(), // Your page widget
               LibraryPage(), // Your page widget
             ],
           ),

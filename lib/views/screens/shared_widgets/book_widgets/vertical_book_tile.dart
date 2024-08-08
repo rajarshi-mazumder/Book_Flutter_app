@@ -50,7 +50,7 @@ class BookTile extends StatelessWidget {
                 .writeUserBooksStarted(bookIdToSave: book.bookId);
             userProvider.addUserBooksStarted(
                 book: book, booksProvider: booksProvider);
-            userProvider.addUserInterestedCategories(
+            userProvider.updateUserInterestedCategories(
                 book: book,
                 booksProvider: booksProvider,
                 categoriesProvider: categoriesProvider);

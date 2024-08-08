@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/categories_data_master.dart';
 import 'package:book_frontend/controllers/books_management/categories_provider/categories_getter_mixin.dart';
@@ -11,6 +13,12 @@ class CategoriesProvider extends ChangeNotifier with CategoriesGetterMixin {
 
   List<Category> get categoriesList => _categoriesList;
 
+  static final StreamController _categoriesFetchedStreamController =
+      StreamController.broadcast();
+
+  static Stream get categoriesFetchedStreamController =>
+      _categoriesFetchedStreamController.stream;
+
   initActions(
       {required AppDataProvider appDataProvider,
       required UserProvider userProvider}) async {
@@ -19,6 +27,7 @@ class CategoriesProvider extends ChangeNotifier with CategoriesGetterMixin {
     sortCategories(
         categoriesInterested: userProvider.user?.interestedCategories);
     notifyListeners();
+    _categoriesFetchedStreamController.add(null);
   }
 
   void sortCategories({List<Map<String, dynamic>>? categoriesInterested}) {

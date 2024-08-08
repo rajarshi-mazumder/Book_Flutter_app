@@ -18,6 +18,9 @@ class AppUser {
   List<Book>? booksRead;
   List<Map<String, dynamic>>? booksStarted;
 
+  // frontend only fields
+  List<Category>? interestedCategoriesList = [];
+
   AppUser({
     required this.id,
     required this.name,
@@ -26,6 +29,7 @@ class AppUser {
     this.interestedCategories,
     this.booksRead,
     this.booksStarted,
+    this.interestedCategoriesList,
   });
 
   // fromMap factory constructor
