@@ -1,7 +1,15 @@
+import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
+import 'package:book_frontend/controllers/books_management/categories_provider/categories_provider.dart';
+import 'package:book_frontend/controllers/books_management/collections_provider/collections_provider.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
+import 'package:book_frontend/models/app_logic_classes/search_result.dart';
+import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/horizontal_categories_list.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/horizontal_collections_list.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/horizontal_books_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,40 +22,81 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<Category> interestedCategories = [];
+  SearchResult? searchResult;
+  String? searchKeyword;
 
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
     interestedCategories = userProvider.user?.interestedCategoriesList ?? [];
+    BooksProvider booksProvider = context.watch<BooksProvider>();
+    CategoriesProvider categoriesProvider = context.watch<CategoriesProvider>();
+    CollectionsProvider collectionsProvider =
+        context.watch<CollectionsProvider>();
+
     return GestureDetector(
       onTap: () {
-        // Unfocus the current text field to collapse the keyboard
         FocusScope.of(context).unfocus();
       },
-      child: Column(
-        children: [
-          Text(interestedCategories.toString()),
-          Container(
-            height: 40,
-            child: ListView(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              children: [
-                ...interestedCategories
-                    .map((e) => Container(
-                        margin: EdgeInsets.only(right: generalMargin),
-                        child: GestureDetector(
-                          child: CategoryTile(category: e),
-                          onTap: () {},
-                        )))
-                    .toList()
-              ],
-            ),
+      child: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.all(generalMargin),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                height: 40,
+                margin: EdgeInsets.symmetric(vertical: generalMargin),
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    ...interestedCategories
+                        .map((e) => Container(
+                            margin: EdgeInsets.only(right: generalMargin),
+                            child: GestureDetector(
+                              child: CategoryTile(category: e),
+                              onTap: () {},
+                            )))
+                        .toList()
+                  ],
+                ),
+              ),
+              SearchFormWidget(onSearch: (val) {
+                setState(() {
+                  searchKeyword = val;
+                  searchResult = search(
+                      val,
+                      booksProvider.booksList,
+                      categoriesProvider.categoriesList,
+                      collectionsProvider.collections);
+                });
+              }),
+              if (searchKeyword != null && searchKeyword!.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (searchResult?.matchedCategories != null &&
+                        searchResult!.matchedCategories.isNotEmpty)
+                      HorizontalCategoriesList(
+                          categories: searchResult!.matchedCategories,
+                          label: "Categories"),
+                    if (searchResult?.matchedBooks != null &&
+                        searchResult!.matchedBooks.isNotEmpty)
+                      HorizontalBooksList(
+                          booksList: searchResult!.matchedBooks,
+                          label: "Matched books"),
+                    if (searchResult?.matchedCategories != null &&
+                        searchResult!.matchedCategories.isNotEmpty)
+                      HorizontalCollectionsList(
+                          collections: searchResult!.matchedCollections,
+                          label: "Matched Collections"),
+                  ],
+                ),
+            ],
           ),
-          SearchFormWidget(onSearch: (val) {
-            print("Searched string $val");
-          })
-        ],
+        ),
       ),
     );
   }
@@ -70,8 +119,8 @@ class _SearchFormWidgetState extends State<SearchFormWidget> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: generalMargin),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -80,19 +129,24 @@ class _SearchFormWidgetState extends State<SearchFormWidget> {
               decoration: InputDecoration(
                 labelText: 'Search',
                 hintText: 'Enter keyword',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a keyword';
+              // validator: (value) {
+              //   if (value == null || value.isEmpty) {
+              //     return 'Please enter a keyword';
+              //   }
+              //   return null;
+              // },
+              onChanged: (val) {
+                if (_formKey.currentState!.validate()) {
+                  widget.onSearch(_searchController.text);
                 }
-                return null;
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
