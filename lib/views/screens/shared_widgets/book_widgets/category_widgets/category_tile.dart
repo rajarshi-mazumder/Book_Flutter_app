@@ -24,7 +24,13 @@ class CategoryTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(category.name, style: categoryNameStyle(appTextTheme)),
+            Text(
+              category.name,
+              style: categoryNameStyle(appTextTheme),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ));
   }

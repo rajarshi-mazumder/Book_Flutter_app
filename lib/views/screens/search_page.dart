@@ -10,6 +10,7 @@ import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/horizontal_categories_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/horizontal_collections_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/horizontal_books_list.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/search_widgets/search_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,21 +45,51 @@ class _SearchPageState extends State<SearchPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const CategoriesListHeader(label: "My favorite categories"),
               Container(
-                height: 40,
                 margin: EdgeInsets.symmetric(vertical: generalMargin),
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
+                child: Column(
                   children: [
-                    ...interestedCategories
-                        .map((e) => Container(
-                            margin: EdgeInsets.only(right: generalMargin),
-                            child: GestureDetector(
-                              child: CategoryTile(category: e),
-                              onTap: () {},
-                            )))
-                        .toList()
+                    SizedBox(
+                      height: 40,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          ...interestedCategories
+                              .take(interestedCategories.length > 4
+                                  ? (interestedCategories.length / 2).ceil()
+                                  : interestedCategories.length)
+                              .map((e) => Container(
+                                  margin: EdgeInsets.only(right: generalMargin),
+                                  child: GestureDetector(
+                                    child: CategoryTile(category: e),
+                                    onTap: () {},
+                                  )))
+                              .toList(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: generalMargin),
+                    if (interestedCategories.length >
+                        4) // Only show the second row if there are more than 4 categories
+                      SizedBox(
+                        height: 40,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...interestedCategories
+                                .skip((interestedCategories.length / 2).ceil())
+                                .map((e) => Container(
+                                    margin:
+                                        EdgeInsets.only(right: generalMargin),
+                                    child: GestureDetector(
+                                      child: CategoryTile(category: e),
+                                      onTap: () {},
+                                    )))
+                                .toList(),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -80,8 +111,10 @@ class _SearchPageState extends State<SearchPage> {
                     if (searchResult?.matchedCategories != null &&
                         searchResult!.matchedCategories.isNotEmpty)
                       HorizontalCategoriesList(
-                          categories: searchResult!.matchedCategories,
-                          label: "Categories"),
+                        categories: searchResult!.matchedCategories,
+                        label: "Matched Categories",
+                        showCategoriesListHeader: true,
+                      ),
                     if (searchResult?.matchedBooks != null &&
                         searchResult!.matchedBooks.isNotEmpty)
                       HorizontalBooksList(
@@ -94,68 +127,9 @@ class _SearchPageState extends State<SearchPage> {
                           label: "Matched Collections"),
                   ],
                 ),
+              const SizedBox(height: 80)
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class SearchFormWidget extends StatefulWidget {
-  final Function(String) onSearch;
-
-  const SearchFormWidget({Key? key, required this.onSearch}) : super(key: key);
-
-  @override
-  _SearchFormWidgetState createState() => _SearchFormWidgetState();
-}
-
-class _SearchFormWidgetState extends State<SearchFormWidget> {
-  final _formKey = GlobalKey<FormState>();
-  final _searchController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: generalMargin),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search',
-                hintText: 'Enter keyword',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-              ),
-              // validator: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'Please enter a keyword';
-              //   }
-              //   return null;
-              // },
-              onChanged: (val) {
-                if (_formKey.currentState!.validate()) {
-                  widget.onSearch(_searchController.text);
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  widget.onSearch(_searchController.text);
-                }
-              },
-              child: Text('Search'),
-            ),
-          ],
         ),
       ),
     );

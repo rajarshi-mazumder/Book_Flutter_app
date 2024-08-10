@@ -89,6 +89,7 @@ class _MainPageLayoutState extends State<MainPageLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const Navbar(),
       body: Stack(
         fit: StackFit.expand,

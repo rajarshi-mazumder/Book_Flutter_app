@@ -8,16 +8,21 @@ import 'package:flutter/material.dart';
 
 class HorizontalCategoriesList extends StatelessWidget {
   const HorizontalCategoriesList(
-      {super.key, required this.categories, required this.label});
+      {super.key,
+      required this.categories,
+      this.label = "",
+      this.showCategoriesListHeader = false});
 
   final List<Category> categories;
   final String label;
+  final bool showCategoriesListHeader;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (showCategoriesListHeader) CategoriesListHeader(label: label),
         SizedBox(
           height: 50,
           child: ListView(
