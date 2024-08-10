@@ -6,11 +6,14 @@ import 'package:book_frontend/models/app_logic_classes/search_result.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/books_list_page.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/horizontal_categories_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/horizontal_collections_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/horizontal_books_list.dart';
-import 'package:book_frontend/views/screens/shared_widgets/book_widgets/search_widgets/search_form_widget.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/search_page_widgets/categories_grid.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/search_page_widgets/search_form_widget.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/utility_functions/filter_books_by_category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,50 +51,7 @@ class _SearchPageState extends State<SearchPage> {
               const CategoriesListHeader(label: "My favorite categories"),
               Container(
                 margin: EdgeInsets.symmetric(vertical: generalMargin),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ...interestedCategories
-                              .take(interestedCategories.length > 4
-                                  ? (interestedCategories.length / 2).ceil()
-                                  : interestedCategories.length)
-                              .map((e) => Container(
-                                  margin: EdgeInsets.only(right: generalMargin),
-                                  child: GestureDetector(
-                                    child: CategoryTile(category: e),
-                                    onTap: () {},
-                                  )))
-                              .toList(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: generalMargin),
-                    if (interestedCategories.length >
-                        4) // Only show the second row if there are more than 4 categories
-                      SizedBox(
-                        height: 40,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            ...interestedCategories
-                                .skip((interestedCategories.length / 2).ceil())
-                                .map((e) => Container(
-                                    margin:
-                                        EdgeInsets.only(right: generalMargin),
-                                    child: GestureDetector(
-                                      child: CategoryTile(category: e),
-                                      onTap: () {},
-                                    )))
-                                .toList(),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
+                child: CategoriesGrid(categoriesList: interestedCategories),
               ),
               SearchFormWidget(onSearch: (val) {
                 setState(() {

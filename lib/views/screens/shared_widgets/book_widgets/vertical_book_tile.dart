@@ -7,16 +7,17 @@ import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/views/screens/book_pages/book_details_page.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/utility_functions/update_user_books_started.dart';
 import 'package:book_frontend/views/screens/shared_widgets/utility_widgets/error_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-double BOOK_COVER_WIDTH = 150;
-double BOOK_COVER_HEIGHT = 200;
+const double BOOK_COVER_WIDTH = 150;
+const double BOOK_COVER_HEIGHT = 200;
 
 //ignore: must_be_immutable
-class BookTile extends StatelessWidget {
-  BookTile(
+class VerticalBookTile extends StatelessWidget {
+  VerticalBookTile(
       {super.key,
       required this.book,
       this.isTappable = true,
@@ -32,30 +33,15 @@ class BookTile extends StatelessWidget {
     UserProvider userProvider = context.watch<UserProvider>();
     BooksProvider booksProvider = context.watch<BooksProvider>();
     CategoriesProvider categoriesProvider = context.watch<CategoriesProvider>();
-    bool checkIfBookExistsInBooksStarted({required UserProvider userProvider}) {
-      if (userProvider.user!.booksStarted != null) {
-        return userProvider.user!.booksStarted!
-            .where((element) => element["book_id"].toString() == book.bookId)
-            .isNotEmpty;
-      } else {
-        return false;
-      }
-    }
 
     return GestureDetector(
       onTap: () {
         if (isTappable) {
-          if (!checkIfBookExistsInBooksStarted(userProvider: userProvider)) {
-            UserCacheServices()
-                .writeUserBooksStarted(bookIdToSave: book.bookId);
-            userProvider.addUserBooksStarted(
-                book: book, booksProvider: booksProvider);
-            userProvider.updateUserInterestedCategories(
-                book: book,
-                booksProvider: booksProvider,
-                categoriesProvider: categoriesProvider);
-          }
-
+          updateUserBooksStarted(
+              userProvider: userProvider,
+              booksProvider: booksProvider,
+              categoriesProvider: categoriesProvider,
+              bookToUpdate: book);
           Navigator.push(
               context,
               MaterialPageRoute(

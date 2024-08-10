@@ -20,7 +20,7 @@ class BookDetailsWidget extends StatelessWidget {
           margin: EdgeInsets.all(generalMargin),
           child: Column(
             children: [
-              BookTile(
+              VerticalBookTile(
                 book: book,
                 showDescription: false,
                 isTappable: false,

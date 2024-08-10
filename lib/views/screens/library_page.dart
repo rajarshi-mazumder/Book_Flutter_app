@@ -6,6 +6,7 @@ import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/horizontal_books_list.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/utility_functions/filter_books_by_category.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/vertical_books_list.dart';
 import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/bottom_nav_bar.dart';
 import 'package:book_frontend/views/screens/shared_widgets/navigation_widgets/nav_bar.dart';
@@ -22,17 +23,15 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   List<Book> filteredBooksList = [];
   final ScrollController _scrollController = ScrollController();
+  Category? selectedCategory;
 
-  filterBooksByCategory(
+  filterBooksListByCategory(
       {required BooksProvider booksProvider,
       required Category categoryToFilterBy}) {
     setState(() {
-      filteredBooksList = booksProvider.booksList.where((book) {
-        for (Category cat in book.categories!) {
-          if (cat.name == categoryToFilterBy.name) return true;
-        }
-        return false;
-      }).toList();
+      filteredBooksList = filterBooksByCategory(
+          booksList: booksProvider.booksList,
+          categoryToFilterBy: categoryToFilterBy);
     });
   }
 
@@ -55,11 +54,13 @@ class _LibraryPageState extends State<LibraryPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        HorizontalBooksList(
-          booksList: booksProvider.booksList
-              .sublist(0, userProvider.user?.booksStarted?.length),
-          label: "Your Learning",
-        ),
+        if (userProvider.user?.booksStarted != null &&
+            userProvider.user!.booksStarted!.isNotEmpty)
+          HorizontalBooksList(
+            booksList: booksProvider.booksList
+                .sublist(0, userProvider.user?.booksStarted?.length),
+            label: "Your Learning",
+          ),
         Container(
           height: 40,
           margin: EdgeInsets.all(generalMargin),
@@ -81,7 +82,10 @@ class _LibraryPageState extends State<LibraryPage> {
                       child: GestureDetector(
                         child: CategoryTile(category: e),
                         onTap: () {
-                          filterBooksByCategory(
+                          setState(() {
+                            selectedCategory = e;
+                          });
+                          filterBooksListByCategory(
                               booksProvider: booksProvider,
                               categoryToFilterBy: e);
                         },
@@ -90,6 +94,9 @@ class _LibraryPageState extends State<LibraryPage> {
             ],
           ),
         ),
+        Text(filteredBooksList.isNotEmpty
+            ? "Showing results for: ${selectedCategory?.name}:"
+            : "Showing all books"),
         VerticalBooksList(
             booksList: filteredBooksList.isNotEmpty
                 ? filteredBooksList

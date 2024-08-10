@@ -1,10 +1,14 @@
+import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/models/books/category.dart';
 import 'package:book_frontend/models/books/collection.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/books_list_page.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/collection_tile.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/utility_functions/filter_books_by_category.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HorizontalCategoriesList extends StatelessWidget {
   const HorizontalCategoriesList(
@@ -19,6 +23,7 @@ class HorizontalCategoriesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BooksProvider booksProvider = context.watch<BooksProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,9 +34,21 @@ class HorizontalCategoriesList extends StatelessWidget {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             children: categories
-                .map((e) => Container(
-                    margin: EdgeInsets.all(generalMargin),
-                    child: CategoryTile(category: e)))
+                .map((e) => GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BooksListPage(
+                                    booksList: filterBooksByCategory(
+                                        booksList: booksProvider.booksList,
+                                        categoryToFilterBy: e),
+                                    label: "Showing results for: ${e.name}")));
+                      },
+                      child: Container(
+                          margin: EdgeInsets.all(generalMargin),
+                          child: CategoryTile(category: e)),
+                    ))
                 .toList(),
           ),
         )
