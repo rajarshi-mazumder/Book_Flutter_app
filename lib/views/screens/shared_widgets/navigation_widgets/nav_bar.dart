@@ -1,4 +1,5 @@
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
+import 'package:book_frontend/controllers/s3_management/s3_management.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:book_frontend/services/cache_services/book_cache_services.dart';
 import 'package:book_frontend/services/cache_services/cache_services.dart';
@@ -33,10 +34,10 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.delete)),
         IconButton(
             onPressed: () {
-              UserCacheServices()
-                  .writeUserInterestedCategories(categoryIdToSave: "3");
+              downloadFile(
+                  "https://book-storage-test-01.s3.ap-northeast-1.amazonaws.com/");
             },
-            icon: Icon(Icons.add)),
+            icon: Icon(Icons.download)),
         IconButton(
             onPressed: () async {
               await userProvider.logout().then((value) =>

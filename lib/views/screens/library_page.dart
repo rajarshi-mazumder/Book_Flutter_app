@@ -54,7 +54,8 @@ class _LibraryPageState extends State<LibraryPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (userProvider.user?.booksStarted != null &&
+        if (booksProvider.booksList.isNotEmpty &&
+            userProvider.user?.booksStarted != null &&
             userProvider.user!.booksStarted!.isNotEmpty)
           HorizontalBooksList(
             booksList: booksProvider.booksList

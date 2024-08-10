@@ -28,12 +28,16 @@ mixin BookGetterMixin on ChangeNotifier {
           userProvider: userProvider,
           booksPaginationNumber: booksPaginationNumber);
 
-      // delete existing bookList cache and write new cache
-      BookCacheServices().deleteBooksListCache();
-      BookCacheServices().writeAllBooks(booksList: booksList).then((_) {
-        AppCacheServices().writeLastBooksListVersion(
-            booksListVersion: appDataProvider.lastBooksListVersion);
-      });
+      if (booksList.isNotEmpty) {
+        // delete existing bookList cache and write new cache
+        BookCacheServices().deleteBooksListCache();
+        BookCacheServices().writeAllBooks(booksList: booksList).then((_) {
+          AppCacheServices().writeLastBooksListVersion(
+              booksListVersion: appDataProvider.lastBooksListVersion);
+        });
+      } else {
+        print("Books list is empty");
+      }
     } else {
       print("No need to download books- reading from cache");
 

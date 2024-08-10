@@ -19,6 +19,8 @@ class Book extends HiveObject {
   @HiveField(3)
   String? coverImgPath;
 
+  String? coverImgPreSignedUrl;
+
   @HiveField(4)
   List<Category>? categories;
 
@@ -37,6 +39,7 @@ class Book extends HiveObject {
     required this.description,
     this.categories,
     this.coverImgPath,
+    this.coverImgPreSignedUrl,
     this.author,
     this.bookDetails,
     this.detailsHash,
@@ -44,17 +47,17 @@ class Book extends HiveObject {
 
   factory Book.fromMap(Map<String, dynamic> map) {
     return Book(
-      bookId: map['id'].toString(),
-      title: map['title'],
-      description: map['description'],
-      coverImgPath: map['cover_img_path'],
-      categories: map['categories'] != null
-          ? List<Category>.from(
-              map['categories'].map((x) => Category.fromMap(x)))
-          : null,
-      author: map['author'] != null ? Author.fromMap(map['author']) : null,
-      detailsHash: map['details_hash'],
-    );
+        bookId: map['id'].toString(),
+        title: map['title'],
+        description: map['description'],
+        coverImgPath: map['cover_img_path'],
+        categories: map['categories'] != null
+            ? List<Category>.from(
+                map['categories'].map((x) => Category.fromMap(x)))
+            : null,
+        author: map['author'] != null ? Author.fromMap(map['author']) : null,
+        detailsHash: map['details_hash'],
+        coverImgPreSignedUrl: map['cover_img_pre_signed_url']);
   }
 
   // toMap method
@@ -68,6 +71,7 @@ class Book extends HiveObject {
           ? List<dynamic>.from(categories!.map((x) => x.toMap()))
           : null,
       'author': author != null ? author!.toMap() : null,
+      'cover_img_pre_signed_url': coverImgPreSignedUrl,
     };
   }
 }
