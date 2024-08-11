@@ -30,7 +30,7 @@ class _BookTileImgWidgetState extends State<BookTileImgWidget> {
       child: Container(
         width: BOOK_TILE_WIDTH,
         height: BOOK_TILE_HEIGHT,
-        color: Colors.blue,
+        color: Colors.black12,
         child: FutureBuilder<String?>(
           future: booksProvider.getBookImage(bookId: widget.book.bookId),
           builder: (context, AsyncSnapshot<String?> snapshot) {

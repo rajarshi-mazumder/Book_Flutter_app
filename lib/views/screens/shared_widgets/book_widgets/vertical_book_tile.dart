@@ -6,6 +6,7 @@ import 'package:book_frontend/services/cache_services/user_cache_services.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/views/screens/book_pages/book_details_page.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/book_tile_widgets/book_tile_img_widget.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/utility_functions/update_user_books_started.dart';
 import 'package:book_frontend/views/screens/shared_widgets/utility_widgets/error_image_widget.dart';
@@ -54,20 +55,7 @@ class VerticalBookTile extends StatelessWidget {
         margin: EdgeInsets.all(generalMargin),
         padding: EdgeInsets.all(generalPadding),
         child: Row(children: [
-          ClipRRect(
-            borderRadius:
-                BorderRadius.all(Radius.circular(generalBorderRadius)),
-            child: SizedBox(
-              width: BOOK_COVER_WIDTH,
-              height: BOOK_COVER_HEIGHT,
-              child: Image.network(
-                book.coverImgPath ?? "",
-                errorBuilder: (context, object, stackTrace) =>
-                    const ErrorImageWidget(),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          BookTileImgWidget(book: book),
           const SizedBox(width: 20),
           Expanded(
             child: Column(

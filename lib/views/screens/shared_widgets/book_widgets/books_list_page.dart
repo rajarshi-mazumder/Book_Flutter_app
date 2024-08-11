@@ -17,12 +17,14 @@ class BooksListPage extends StatelessWidget {
       appBar: const Navbar(),
       body: Container(
         margin: EdgeInsets.all(generalMargin),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            VerticalBooksListHeader(label: label),
-            VerticalBooksList(booksList: booksList),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              VerticalBooksListHeader(label: label),
+              VerticalBooksList(booksList: booksList),
+            ],
+          ),
         ),
       ),
     );

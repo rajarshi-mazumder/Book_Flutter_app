@@ -40,7 +40,6 @@ class BookCacheServices {
 
       // If the book exists in Hive, update it
       if (bookKey != null) {
-        updatedBook.title = "${updatedBook.title}_0";
         await _allBooksBox?.put(bookKey, updatedBook);
         print(
             "Book '${updatedBook.title} ${updatedBook.coverImgLocalPath}' updated successfully in Hive.");
