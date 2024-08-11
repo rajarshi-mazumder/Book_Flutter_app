@@ -78,9 +78,9 @@ class _HomePageState extends State<HomePage> {
           Text(
               "Welcome ${userProvider.user?.name}, ${userProvider.user?.email} "),
           Text(
-              '${userProvider.user?.booksStarted?.map((e) => e["book_id"]).toList()}'),
+              'books started: ${userProvider.user?.booksStarted?.map((e) => e["book_id"]).toList()}'),
           Text(
-              ' ${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
+              'int categories:  ${userProvider.user?.interestedCategories?.map((e) => e["category_id"]).toList()}'),
           Row(
             children: [
               Text(

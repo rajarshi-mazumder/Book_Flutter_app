@@ -12,15 +12,15 @@ List<Book> sortBooksByRelevance(
       Map<String, dynamic>? aStarted = booksStarted.firstWhere(
           (book) => book['book_id'].toString() == a.bookId,
           orElse: () => {});
-      Map<String, dynamic>? bStarted = booksStarted?.firstWhere(
+      Map<String, dynamic>? bStarted = booksStarted.firstWhere(
           (book) => book['book_id'].toString() == b.bookId,
           orElse: () => {});
 
-      if (aStarted!.isNotEmpty && bStarted!.isEmpty) {
+      if (aStarted.isNotEmpty && bStarted.isEmpty) {
         return -1; // a is started, b is not
-      } else if (aStarted.isEmpty && bStarted!.isNotEmpty) {
+      } else if (aStarted.isEmpty && bStarted.isNotEmpty) {
         return 1; // b is started, a is not
-      } else if (aStarted!.isNotEmpty && bStarted!.isNotEmpty) {
+      } else if (aStarted.isNotEmpty && bStarted.isNotEmpty) {
         DateTime aDate = aStarted['started_date'].runtimeType == String
             ? dateFormat.parse(aStarted['started_date'])
             : aStarted['started_date'];
