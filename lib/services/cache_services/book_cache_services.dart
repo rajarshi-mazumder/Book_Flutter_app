@@ -27,6 +27,31 @@ class BookCacheServices {
     readAllBooks();
   }
 
+  Future<void> updateBookInHive({required Book updatedBook}) async {
+    try {
+      // Find the book by its unique identifier (bookId)
+      final bookKey = _allBooksBox?.keys.firstWhere(
+        (key) {
+          final book = _allBooksBox?.get(key);
+          return book?.bookId == updatedBook.bookId;
+        },
+        orElse: () => null,
+      );
+
+      // If the book exists in Hive, update it
+      if (bookKey != null) {
+        updatedBook.title = "${updatedBook.title}_0";
+        await _allBooksBox?.put(bookKey, updatedBook);
+        print(
+            "Book '${updatedBook.title} ${updatedBook.coverImgLocalPath}' updated successfully in Hive.");
+      } else {
+        print("Book with id '${updatedBook.bookId}' not found.");
+      }
+    } catch (e) {
+      print("Error updating book '${updatedBook.title}': $e");
+    }
+  }
+
   Future<List<Book>> readAllBooks() async {
     // Retrieve all books from the box and convert them to a list
     List<Book>? books = _allBooksBox?.values.toList();
@@ -79,8 +104,10 @@ class BookCacheServices {
 
   deleteAllBookCache({required BooksProvider booksProvider}) {
     deleteBooksListCache();
-    for (Book b in booksProvider.booksList) {
-      _bookDataBox?.delete('book_${b.bookId}');
-    }
+    _bookDataBox?.clear();
+
+    // for (Book b in booksProvider.booksList) {
+    //   _bookDataBox?.delete('book_${b.bookId}');
+    // }
   }
 }

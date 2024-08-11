@@ -32,12 +32,12 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
               deleteAllCachedData(booksProvider: booksProvider);
             },
             icon: Icon(Icons.delete)),
-        IconButton(
-            onPressed: () {
-              downloadFile(
-                  "https://book-storage-test-01.s3.ap-northeast-1.amazonaws.com/");
-            },
-            icon: Icon(Icons.download)),
+        // IconButton(
+        //     onPressed: () {
+        //       downloadFile(
+        //           localFilePath: 'testObj.png', preSignedUrl: );
+        //     },
+        //     icon: Icon(Icons.download)),
         IconButton(
             onPressed: () async {
               await userProvider.logout().then((value) =>

@@ -5,23 +5,14 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-Future<void> downloadFile(String url, {String fileName = 'testObj.png'}) async {
+Future<String?> downloadFile(
+    {required String localFilePath, required String preSignedUrl}) async {
   try {
-    String? preSignedUrl = await getPreSignedUrl(fileName: fileName);
-    if (preSignedUrl == null) {
-      return;
-    }
-
-    final directory = await getApplicationDocumentsDirectory();
-
-    // Create a full path to save the file.
-    final filePath = '${directory.path}/$fileName';
-
     // Create an instance of Dio.
     final dio = Dio();
 
     // Start the download.
-    final response = await dio.download(preSignedUrl, filePath,
+    final response = await dio.download(preSignedUrl, localFilePath,
         onReceiveProgress: (received, total) {
       if (total != -1) {
         print('${(received / total * 100).toStringAsFixed(0)}%');
@@ -30,26 +21,39 @@ Future<void> downloadFile(String url, {String fileName = 'testObj.png'}) async {
 
     // Check if the download was successful.
     if (response.statusCode == 200) {
-      print('File downloaded successfully to $filePath');
+      print('File downloaded successfully to $localFilePath');
+      return localFilePath;
     } else {
       print('Failed to download file');
     }
   } catch (e) {
     print('Error downloading file: $e');
   }
+  return null;
 }
 
 Future<String?> getPreSignedUrl({required String fileName}) async {
   const baseurl = "http://10.0.2.2:5000";
+  Map<String, dynamic> params = {"object_name": fileName};
 
-  final url = Uri.parse("$baseurl/get_presigned_url/$fileName");
-  final response = await http.get(url);
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    print("RESPONSE ${response.body}");
+  final url = Uri.parse(baseurl)
+      .replace(path: '/get_pre_signed_url', queryParameters: params);
 
-    return data["signed_url"];
-    // return {"preSignedUrl": data};
+  try {
+    final response = await http
+        .get(url)
+        .timeout(const Duration(seconds: 10)); // Set a timeout
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print("RESPONSE ${response.body}");
+      return data["signed_url"];
+    } else {
+      print("Failed to get pre-signed URL: ${response.statusCode}");
+      return null;
+    }
+  } catch (e) {
+    print("Error occurred while fetching pre-signed URL: $e");
+    return null;
   }
-  return null;
 }

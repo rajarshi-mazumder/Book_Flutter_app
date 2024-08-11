@@ -33,6 +33,9 @@ class Book extends HiveObject {
   @HiveField(7)
   String? detailsHash;
 
+  @HiveField(8)
+  String? coverImgLocalPath;
+
   Book({
     required this.bookId,
     required this.title,
@@ -43,6 +46,7 @@ class Book extends HiveObject {
     this.author,
     this.bookDetails,
     this.detailsHash,
+    this.coverImgLocalPath,
   });
 
   factory Book.fromMap(Map<String, dynamic> map) {
@@ -72,6 +76,7 @@ class Book extends HiveObject {
           : null,
       'author': author != null ? author!.toMap() : null,
       'cover_img_pre_signed_url': coverImgPreSignedUrl,
+      'cover_img_local_path': coverImgLocalPath,
     };
   }
 }

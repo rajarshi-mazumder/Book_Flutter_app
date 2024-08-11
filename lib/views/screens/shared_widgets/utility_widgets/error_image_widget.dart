@@ -6,7 +6,7 @@ class ErrorImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      "assets/images/default_collections.jpg",
+      "assets/images/Stack-of-Books-Clipart.jpg",
       fit: BoxFit.cover,
     );
   }

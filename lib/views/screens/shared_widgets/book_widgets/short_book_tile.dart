@@ -7,6 +7,7 @@ import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/theme/theme_constants.dart';
 import 'package:book_frontend/views/screens/book_pages/book_details_page.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/book_tile_widgets/book_tile_img_widget.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/category_widgets/short_category_tile.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/utility_functions/update_user_books_started.dart';
@@ -57,21 +58,7 @@ class ShortBookTile extends StatelessWidget {
         width: SHORT_BOOK_TILE_WIDTH,
         margin: EdgeInsets.all(generalMargin),
         child: Stack(children: [
-          ClipRRect(
-            borderRadius:
-                BorderRadius.all(Radius.circular(generalBorderRadius)),
-            child: Container(
-              width: SHORT_BOOK_TILE_WIDTH,
-              height: SHORT_BOOK_TILE_HEIGHT,
-              color: primaryColor,
-              child: Image.network(
-                book.coverImgPath ?? "",
-                errorBuilder: (context, object, stackTrace) =>
-                    const ErrorImageWidget(),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          BookTileImgWidget(book: book),
           Positioned(
             bottom: 0,
             child: ClipRRect(
