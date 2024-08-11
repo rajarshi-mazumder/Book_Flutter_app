@@ -2,6 +2,7 @@ import 'package:book_frontend/models/books/collection.dart';
 import 'package:book_frontend/theme/app_defaults.dart';
 import 'package:book_frontend/theme/text_themes.dart';
 import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/collection_books_list_page.dart';
+import 'package:book_frontend/views/screens/shared_widgets/book_widgets/collection_widgets/collection_tile_img_widget.dart';
 import 'package:book_frontend/views/screens/shared_widgets/utility_widgets/error_image_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -33,12 +34,7 @@ class CollectionTile extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.network(
-                collection.collectionImgPath ?? "",
-                errorBuilder: (context, object, stackTrace) =>
-                    const ErrorImageWidget(),
-                fit: BoxFit.cover,
-              ),
+              CollectionTileImgWidget(collection: collection),
               Positioned(
                 bottom: -2,
                 child: ClipRRect(

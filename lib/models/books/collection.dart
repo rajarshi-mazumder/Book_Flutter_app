@@ -17,6 +17,8 @@ class Collection {
   @HiveField(2)
   String description;
 
+  String? collectionImgPreSignedUrl;
+
   @HiveField(3)
   String collectionImgPath;
 
@@ -25,27 +27,31 @@ class Collection {
 
   List<Book>? books = [];
 
-  Collection({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.collectionImgPath,
-    this.categories,
-    this.books,
-  });
+  @HiveField(5)
+  String? collectionImgLocalPath;
+
+  Collection(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.collectionImgPath,
+      this.categories,
+      this.books,
+      this.collectionImgPreSignedUrl,
+      this.collectionImgLocalPath});
 
   // Factory constructor to create a Collection from a map
   factory Collection.fromMap(Map<String, dynamic> map) {
     return Collection(
-      id: map['id'].toString(),
-      name: map['name'],
-      description: map['description'],
-      collectionImgPath: map['collection_img_path'] ?? '',
-      categories: map['categories'] != null
-          ? List<Category>.from(
-              map['categories'].map((category) => Category.fromMap(category)))
-          : [],
-    );
+        id: map['id'].toString(),
+        name: map['name'],
+        description: map['description'],
+        collectionImgPath: map['collection_img_path'] ?? '',
+        categories: map['categories'] != null
+            ? List<Category>.from(
+                map['categories'].map((category) => Category.fromMap(category)))
+            : [],
+        collectionImgPreSignedUrl: map["collection_img_pre_signed_url"]);
   }
 
   // Method to convert a Collection object to a map
@@ -58,6 +64,7 @@ class Collection {
       'categories': categories != null
           ? categories!.map((category) => category.toMap()).toList()
           : [],
+      'collection_img_pre_signed_url': collectionImgPreSignedUrl,
     };
   }
 }

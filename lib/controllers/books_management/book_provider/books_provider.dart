@@ -93,7 +93,7 @@ class BooksProvider extends ChangeNotifier
           }
           return b.coverImgLocalPath;
         } else {
-          return b.coverImgLocalPath!;
+          return b.coverImgLocalPath;
         }
       }
     }

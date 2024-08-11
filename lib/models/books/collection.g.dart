@@ -22,13 +22,14 @@ class CollectionAdapter extends TypeAdapter<Collection> {
       description: fields[2] as String,
       collectionImgPath: fields[3] as String,
       categories: (fields[4] as List?)?.cast<Category>(),
+      collectionImgLocalPath: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Collection obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class CollectionAdapter extends TypeAdapter<Collection> {
       ..writeByte(3)
       ..write(obj.collectionImgPath)
       ..writeByte(4)
-      ..write(obj.categories);
+      ..write(obj.categories)
+      ..writeByte(5)
+      ..write(obj.collectionImgLocalPath);
   }
 
   @override
