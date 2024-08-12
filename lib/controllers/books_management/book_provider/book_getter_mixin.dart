@@ -88,7 +88,8 @@ mixin BookGetterMixin on ChangeNotifier {
           String savePath = "$basePath/${b.bookId}.jpg";
           String? preSignedUrl;
           if (b.coverImgPath != null) {
-            preSignedUrl = await getPreSignedUrl(fileName: b.coverImgPath!);
+            // preSignedUrl = await getPreSignedUrl(fileName: b.coverImgPath!);
+            preSignedUrl = b.coverImgPreSignedUrl;
           }
           String? localFilePath = await fetchS3Object(
               imgPath: b.coverImgPath!,

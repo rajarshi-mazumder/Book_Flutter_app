@@ -37,15 +37,14 @@ class _BookTileImgWidgetState extends State<BookTileImgWidget> {
             if (snapshot.data == null) {
               return LoadingIcon();
             } else {
-              print("MY FILE ${snapshot.data}");
               File file = File(snapshot.data!);
               file.exists().then((val) {
-                print("FILE EXISTS $val");
+                print("Image file exists $val");
               });
               return Image.file(
                 file,
-                // errorBuilder: (context, object, stackTrace) =>
-                //     const ErrorImageWidget(),
+                errorBuilder: (context, object, stackTrace) =>
+                    const ErrorImageWidget(),
                 fit: BoxFit.cover,
               );
             }

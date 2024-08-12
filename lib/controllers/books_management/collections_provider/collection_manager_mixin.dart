@@ -109,7 +109,8 @@ mixin CollectionManagerMixin {
           String savePath = "$basePath/${c.id}.jpg";
           String? preSignedUrl;
 
-          preSignedUrl = await getPreSignedUrl(fileName: c.collectionImgPath);
+          // preSignedUrl = await getPreSignedUrl(fileName: c.collectionImgPath);
+          preSignedUrl = c.collectionImgPreSignedUrl;
 
           String? localFilePath = await fetchS3Object(
               imgPath: c.collectionImgPath,

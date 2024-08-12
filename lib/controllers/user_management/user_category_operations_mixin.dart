@@ -45,10 +45,9 @@ mixin UserCategoryOperationsMixin {
 
           UserCacheServices().writeUserInterestedCategories(
               categoryIdToSave: cat.id.toString());
-          return interestedCategories;
         }
       }
     }
-    return null;
+    return interestedCategories;
   }
 }
