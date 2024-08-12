@@ -46,7 +46,6 @@ Future<String?> getPreSignedUrl({required String fileName}) async {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print("RESPONSE ${response.body}");
       return data["signed_url"];
     } else {
       print("Failed to get pre-signed URL: ${response.statusCode}");

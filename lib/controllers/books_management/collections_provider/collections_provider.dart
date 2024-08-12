@@ -12,21 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:book_frontend/controllers/s3_management/s3_image_getter_mixin.dart';
 
-class CollectionsProvider extends ChangeNotifier
-    with CollectionManagerMixin, S3ImageGetterMixin {
+class CollectionsProvider extends ChangeNotifier with CollectionManagerMixin {
   List<Collection> _collections = [];
   List<Collection> _recommendedCollections = [];
 
   List<Collection> get collections => _collections;
 
   List<Collection> get recommendedCollections => _recommendedCollections;
-
-  static Future<String> collectionImageBaseLocalPath() async {
-    // final directory = await getApplicationDocumentsDirectory();
-    final directory = await getExternalStorageDirectory();
-    String filePath = '${directory?.path}/collection_images';
-    return filePath;
-  }
 
   initActions({
     required AppDataProvider appDataProvider,
@@ -84,32 +76,7 @@ class CollectionsProvider extends ChangeNotifier
   }
 
   Future<String?> getCollectionImage({required String collectionId}) async {
-    for (Collection c in collections) {
-      if (c.id == collectionId) {
-        if (c.collectionImgLocalPath == null) {
-          print("Collection ${c.name} collectionImgLocal is null");
-
-          String basePath = await collectionImageBaseLocalPath();
-          String savePath = "$basePath/${c.id}.jpg";
-          String? preSignedUrl;
-
-          preSignedUrl = await getPreSignedUrl(fileName: c.collectionImgPath);
-
-          String? localFilePath = await fetchS3Object(
-              imgPath: c.collectionImgPath,
-              savePath: savePath,
-              preSignedUrlStr: preSignedUrl);
-          c.collectionImgLocalPath = localFilePath;
-          if (localFilePath != null) {
-            CollectionsCacheServices()
-                .updateCollectionInHive(updatedCollection: c);
-          }
-          return c.collectionImgLocalPath;
-        } else {
-          return c.collectionImgLocalPath;
-        }
-      }
-    }
-    return null;
+    return await getImageForCollection(
+        collections: collections, collectionId: collectionId);
   }
 }

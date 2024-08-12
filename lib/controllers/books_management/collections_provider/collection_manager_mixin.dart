@@ -1,9 +1,20 @@
 import 'package:book_frontend/controllers/books_management/collections_data_master.dart';
+import 'package:book_frontend/controllers/s3_management/s3_image_getter_mixin.dart';
+import 'package:book_frontend/controllers/s3_management/s3_management.dart';
 import 'package:book_frontend/models/books/book.dart';
 import 'package:book_frontend/models/books/collection.dart';
+import 'package:book_frontend/services/cache_services/collections_cache_services.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 mixin CollectionManagerMixin {
+  static Future<String> collectionImageBaseLocalPath() async {
+    // final directory = await getApplicationDocumentsDirectory();
+    final directory = await getExternalStorageDirectory();
+    String filePath = '${directory?.path}/collection_images';
+    return filePath;
+  }
+
   List<Book> getBookForCollection(Collection collection, List<Book> allBooks) {
     // Check if collection categories are null and return an empty list if so
     if (collection.categories == null) {
@@ -86,5 +97,35 @@ mixin CollectionManagerMixin {
     });
 
     return collections;
+  }
+
+  Future<String?> getImageForCollection(
+      {required List<Collection> collections,
+      required String collectionId}) async {
+    for (Collection c in collections) {
+      if (c.id == collectionId) {
+        if (c.collectionImgLocalPath == null) {
+          String basePath = await collectionImageBaseLocalPath();
+          String savePath = "$basePath/${c.id}.jpg";
+          String? preSignedUrl;
+
+          preSignedUrl = await getPreSignedUrl(fileName: c.collectionImgPath);
+
+          String? localFilePath = await fetchS3Object(
+              imgPath: c.collectionImgPath,
+              savePath: savePath,
+              preSignedUrlStr: preSignedUrl);
+          c.collectionImgLocalPath = localFilePath;
+          if (localFilePath != null) {
+            CollectionsCacheServices()
+                .updateCollectionInHive(updatedCollection: c);
+          }
+          return c.collectionImgLocalPath;
+        } else {
+          return c.collectionImgLocalPath;
+        }
+      }
+    }
+    return null;
   }
 }

@@ -17,7 +17,7 @@ import 'book_getter_mixin.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BooksProvider extends ChangeNotifier
-    with BookGetterMixin, BookDetailsMixin, S3ImageGetterMixin {
+    with BookGetterMixin, BookDetailsMixin {
   List<Book> _booksList = [];
 
   List<Book> get booksList => _booksList;
@@ -27,13 +27,6 @@ class BooksProvider extends ChangeNotifier
   bool hasNext = true;
 
   List<Book> get recommendedBooks => _recommendedBooks;
-
-  static Future<String> coverImageBaseLocalPath() async {
-    // final directory = await getApplicationDocumentsDirectory();
-    final directory = await getExternalStorageDirectory();
-    String filePath = '${directory?.path}/book_cover_images';
-    return filePath;
-  }
 
   static final StreamController _booksFetchedStreamController =
       StreamController.broadcast();
@@ -70,33 +63,6 @@ class BooksProvider extends ChangeNotifier
   }
 
   Future<String?> getBookImage({required String bookId}) async {
-    for (Book b in _booksList) {
-      if (b.bookId == bookId) {
-        if (b.coverImgLocalPath == null) {
-          print("Book ${b.title} coverImgLocal is null");
-          if (b.coverImgPath == null) {
-            return null;
-          }
-          String basePath = await coverImageBaseLocalPath();
-          String savePath = "$basePath/${b.bookId}.jpg";
-          String? preSignedUrl;
-          if (b.coverImgPath != null) {
-            preSignedUrl = await getPreSignedUrl(fileName: b.coverImgPath!);
-          }
-          String? localFilePath = await fetchS3Object(
-              imgPath: b.coverImgPath!,
-              savePath: savePath,
-              preSignedUrlStr: preSignedUrl);
-          b.coverImgLocalPath = localFilePath;
-          if (localFilePath != null) {
-            BookCacheServices().updateBookInHive(updatedBook: b);
-          }
-          return b.coverImgLocalPath;
-        } else {
-          return b.coverImgLocalPath;
-        }
-      }
-    }
-    return null;
+    return await getImageForBook(booksList: booksList, bookId: bookId);
   }
 }
