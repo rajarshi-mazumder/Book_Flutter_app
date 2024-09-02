@@ -4,7 +4,8 @@ import 'package:book_frontend/controllers/user_management/user_provider.dart';
 import 'package:http/http.dart' as http;
 
 class CategoriesDataMaster {
-  static const baseurl = "http://10.0.2.2:5000";
+  // static const baseurl = "http://10.0.2.2:5000";
+  static const baseurl = "http://43.206.213.88:5000";
 
   static Future<List?> getCategories(
       {required UserProvider userProvider}) async {

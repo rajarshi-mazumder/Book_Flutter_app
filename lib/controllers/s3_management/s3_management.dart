@@ -33,7 +33,7 @@ Future<String?> downloadFile(
 }
 
 Future<String?> getPreSignedUrl({required String fileName}) async {
-  const baseurl = "http://10.0.2.2:5000";
+  const baseurl = "http://43.206.213.88:5000";
   Map<String, dynamic> params = {"object_name": fileName};
 
   final url = Uri.parse(baseurl)

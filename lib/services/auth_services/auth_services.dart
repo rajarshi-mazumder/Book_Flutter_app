@@ -3,7 +3,8 @@ import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const baseurl = "http://10.0.2.2:5000";
+// const baseurl = "http://10.0.2.2:5000";
+const baseurl = "http://43.206.213.88:5000";
 
 class AuthService {
   static var logger = Logger(
