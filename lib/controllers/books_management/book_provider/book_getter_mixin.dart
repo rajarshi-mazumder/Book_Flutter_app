@@ -31,7 +31,7 @@ mixin BookGetterMixin on ChangeNotifier {
     // if (!hasNext) {
     //   return;
     // }
-    if (needToDownloadBookslist) {
+    if (true || needToDownloadBookslist) {
       print("Need to download books- downloading and caching");
 
       booksList = await downloadBooksList(

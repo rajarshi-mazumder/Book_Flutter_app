@@ -51,7 +51,7 @@ class Book extends HiveObject {
 
   factory Book.fromMap(Map<String, dynamic> map) {
     return Book(
-        bookId: map['id'].toString(),
+        bookId: map['book_id'].toString(),
         title: map['title'],
         description: map['description'],
         coverImgPath: map['cover_img_path'],

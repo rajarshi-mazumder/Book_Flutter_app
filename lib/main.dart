@@ -28,9 +28,9 @@ void main() async {
   await Hive.openBox("books_data");
   await Hive.openBox("user_data");
 
-  Hive.openBox<Book>('all_books');
-  Hive.openBox<Category>('all_categories');
-  Hive.openBox<Collection>('all_collections');
+  await Hive.openBox<Book>('all_books');
+  await Hive.openBox<Category>('all_categories');
+  await Hive.openBox<Collection>('all_collections');
 
   runApp(const MyApp());
 }
