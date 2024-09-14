@@ -1,3 +1,4 @@
+import 'package:book_frontend/controllers/app_data_management/app_data_provider.dart';
 import 'package:book_frontend/controllers/books_management/book_provider/books_provider.dart';
 import 'package:book_frontend/controllers/s3_management/s3_management.dart';
 import 'package:book_frontend/controllers/user_management/user_provider.dart';
@@ -23,6 +24,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
         Provider.of<UserProvider>(context, listen: false);
 
     BooksProvider booksProvider = Provider.of<BooksProvider>(context);
+    AppDataProvider appDataProvider = Provider.of<AppDataProvider>(context);
     return AppBar(
       title: Text(title),
       actions: [
@@ -32,12 +34,12 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
               deleteAllCachedData(booksProvider: booksProvider);
             },
             icon: Icon(Icons.delete)),
-        // IconButton(
-        //     onPressed: () {
-        //       downloadFile(
-        //           localFilePath: 'testObj.png', preSignedUrl: );
-        //     },
-        //     icon: Icon(Icons.download)),
+        IconButton(
+            onPressed: () {
+              booksProvider.getBooks(
+                  appDataProvider: appDataProvider, userProvider: userProvider);
+            },
+            icon: Icon(Icons.download)),
         IconButton(
             onPressed: () async {
               await userProvider.logout().then((value) =>

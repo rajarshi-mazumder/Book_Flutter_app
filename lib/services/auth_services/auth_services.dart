@@ -1,10 +1,10 @@
 import 'dart:convert';
+import 'package:book_frontend/services/connection_services/connection_services.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// const baseurl = "http://10.0.2.2:5000";
-const baseurl = "http://43.206.213.88:5000";
+// const baseurl = "http://43.206.213.88:5000";
 
 class AuthService {
   static var logger = Logger(
@@ -17,20 +17,25 @@ class AuthService {
   /// After logging in, it saves the token received, and returns the user_data
   static Future<Map<String, dynamic>> login(
       String email, String password) async {
-    final url = Uri.parse('$baseurl/login'); // Replace with your backend URL
+    final url =
+        Uri.parse('$baseUrl/auth/login'); // Replace with your backend URL
 
-    final response = await http.get(
-      url,
-      headers: <String, String>{
-        'Authorization':
-            'Basic ${base64Encode(utf8.encode('$email:$password'))}',
-      },
-    );
+    final response = await http.post(url,
+        headers: <String, String>{
+          // 'Authorization':
+          //     'Basic ${base64Encode(utf8.encode('$email:$password'))}',
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final token = data['token'];
-      final userData = data['user_data'];
-      final appData = data['app_data'];
+      final token = data['data']['auth_data']['token'];
+      final userData = data['data']['user_data'];
+      final appData = data['data']['app_data'];
 
       // Save the token in local storage or use it for subsequent requests
       await saveAuthToken(token: token);
@@ -51,7 +56,8 @@ class AuthService {
   /// After registering , it saves the token received, and returns the user_data
   static Future<Map<String, dynamic>> register(
       String name, String email, String password) async {
-    final url = Uri.parse('$baseurl/register'); // Replace with your backend URL
+    final url =
+        Uri.parse('$baseUrl/auth/register'); // Replace with your backend URL
 
     final response = await http.post(
       url,
@@ -87,8 +93,8 @@ class AuthService {
   /// if token is null, returns null
   /// if token is not null, it returns user_data
   static Future<Map<String, dynamic>?> silentLogin() async {
-    final url =
-        Uri.parse('$baseurl/silent_login'); // Replace with your backend URL
+    final url = Uri.parse(
+        '$baseUrl/auth/retrieve-user'); // Replace with your backend URL
     final token = await storage.read(key: 'jwt_token');
 
     if (token == null) {
@@ -99,14 +105,15 @@ class AuthService {
       final response = await http.get(
         url,
         headers: <String, String>{
+          'accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final userData = data['user_data'];
-        final appData = data['app_data'];
+        final userData = data['data']['user_data'];
+        final appData = data['data']['app_data'];
 
         return {"user_data": userData, "app_data": appData};
       } else {

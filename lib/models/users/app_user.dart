@@ -40,10 +40,10 @@ class AppUser {
         UserCacheServices().readUserInterestedCategories();
 
     return AppUser(
-      id: map['id'].toString(),
-      name: map['name'],
+      id: map['user_id'].toString(),
+      name: map['username'],
       email: map['email'],
-      admin: map['admin'],
+      admin: map['admin'] ?? false,
       interestedCategories:
           (tempInterestedCategories == null || tempInterestedCategories.isEmpty)
               ? defaultInterestedCategories
